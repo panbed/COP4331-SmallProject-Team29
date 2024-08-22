@@ -1,0 +1,21 @@
+services:
+  web:
+    image: php:8.2-apache
+    build: ./
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    volumes:
+    # maps the 'html' folder in this directory to /var/www/html
+      - ./html:/var/www/html
+  db:
+    image: mysql:8.0.39
+    # command: --lower_case_table_names=0
+    environment:
+    # set mysql root and password, by default this is very unsafe lol
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+    # maps the 'mysql_data' folder to /var/lib/mysql
+      - ./mysql:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
