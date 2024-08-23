@@ -248,7 +248,7 @@ function setTheme() {
 }
 
 // extra functions to load after the window loads
-$(function() {
+$(function () {
 
   // read localstorage and set options
   setTheme();
@@ -257,5 +257,12 @@ $(function() {
     searchContacts();
   });
 
+  $(document).on("keydown", (event) => {
+    if (event.key === "Enter") {
+      if (!$("#loginButton").prop("disabled")) {
+        doLogin();
+      }
+    }
+  });
 
 })
