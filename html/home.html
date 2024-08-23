@@ -27,7 +27,7 @@
 </head>
 
 <body>
-  <nav class="navbar p-2 bg-body-secondary">
+  <nav class="navbar mb-3 p-2 bg-body-secondary sticky-top">
     <div class="container">
       <div class="justify-content-start">
         <div id="userName" class="navbar-brand" href="#"></div>
@@ -36,18 +36,16 @@
       <div class="justify-content-end">
         <button type="button" id="logoutButton" class="btn btn-secondary" onclick="doLogout();">
           <i class="bi bi-box-arrow-right"></i>
-          Sign Out
         </button>
       </div>
 
       <div class="pt-2 w-100"></div>
 
-
-      <div class="justify-content-start">
+      <div class="justify-content-start flex-fill pe-3">
         <input id="searchBar" type="search" class="form-control" placeholder="Search for someone!">
       </div>
 
-      <div class="justify-content-end">
+      <div class="btn-group justify-content-end" role="group" aria-label="Tools">
         <button type="button" id="addContactButton" class="btn btn-primary" onclick="console.log(`in progress...`);">
           <i class="bi bi-person-fill-add"></i>
         </button>
@@ -55,31 +53,11 @@
           <i class="bi bi-sliders"></i>
         </button>
       </div>
+      
     </div>
   </nav>
 
-  <div class="container-fluid">
-
-    <!-- <div>
-      <div id="accessUIDiv">
-        <br />
-  
-        <input type="text" id="searchText" placeholder="Color To Search For" />
-        <button type="button" id="searchColorButton" class="buttons" onclick="searchColor();"> Search Color
-        </button><br />
-        <span id="colorSearchResult"></span>
-        <p id="colorList">
-        </p><br /><br />
-  
-        <input type="text" id="contactNameInput" placeholder="Name">
-        <input type="text" id="contactPhoneInput" placeholder="Phone">
-        <input type="text" id="contactEmailInput" placeholder="Email">
-  
-        <button type="button" id="addContactButton" class="buttons" onclick="addContact();"> Add Color </button><br />
-        <span id="colorAddResult"></span>
-      </div>
-    </div> -->
-
+  <div id="allContactsView" class="container">
   </div>
 
 </body>

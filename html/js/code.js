@@ -1,5 +1,5 @@
 // ** PRODUCTION SHOULD USE THE CORRECT URL **
-const urlBase = 'http://localhost/LAMPAPI';
+const urlBase = `http://${document.location.host}/LAMPAPI`;
 const extension = 'php';
 
 let userId = 0;
@@ -33,8 +33,8 @@ function doLogin() {
 				userId = jsonObject.id;
 
 				if (userId < 1) {
-          // Print error message below the login window
-          $("#loginResult").html(`
+					// Print error message below the login window
+					$("#loginResult").html(`
           <div class="p-2 m-2 d-flex alert alert-warning alert-dismissable" role="alert">
             <div>Incorrect username or password!</div>
             <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -94,8 +94,8 @@ function readCookie() {
 		window.location.href = "index.html";
 	}
 	else {
-    document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
-    $("#userName").html(`
+		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+		$("#userName").html(`
       <div id="userName" class="navbar-brand" href="#">Hello, <strong>${firstName} ${lastName}</strong>!</div>
     `);
 	}
@@ -123,7 +123,7 @@ function addContact() {
 		userId: userId
 	});
 
-	let url = `${urlBase}/AddContact.${extension}`
+	let url = `${urlBase}/AddContact.${extension}`;
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
@@ -131,57 +131,88 @@ function addContact() {
 	try {
 		xhr.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-        $("#colorAddResult").text("Contact has been added");
+				$("#colorAddResult").text("Contact has been added");
 			}
 		};
 		xhr.send(json);
 	}
 	catch (err) {
-    $("#colorAddResult").text(err.message);
+		$("#colorAddResult").text(err.message);
 	}
+}
+
+function createContactDiv(name, phone, email) {
+  // creates a nicely styled div that looks nice in a list
+  let htmlString = `
+    <div class="card mb-3">
+    <div class="card-header d-flex">
+      <div class="flex-fill my-auto">
+        <span><strong>${name}</strong></span>
+      </div>
+
+      <div class="">
+        <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button>
+        <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
+      </div>
+    </div>
+    <div class="card-body">
+      <p>${phone}</p>
+      <p>${email}</p>
+    </div>
+  </div>
+  `
+
+  return htmlString;
 }
 
 function searchContacts() {
-  let search = $("searchText").val();
-  let postJSON = JSON.stringify({
-    
-  })
-}
+	let search = $("#searchBar").val();
+	let postJSON = JSON.stringify({
+		search: search,
+		userId: userId
+	});
 
-function searchColor() {
-	let srch = document.getElementById("searchText").value;
-	document.getElementById("colorSearchResult").innerHTML = "";
-
-	let colorList = "";
-
-	let tmp = { search: srch, userId: userId };
-	let jsonPayload = JSON.stringify(tmp);
-
-	let url = urlBase + '/SearchColors.' + extension;
-
+	let url = `${urlBase}/SearchContacts.${extension}`;
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
 	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
 	try {
 		xhr.onreadystatechange = function () {
 			if (this.readyState == 4 && this.status == 200) {
-				document.getElementById("colorSearchResult").innerHTML = "Color(s) has been retrieved";
-				let jsonObject = JSON.parse(xhr.responseText);
+        let json = JSON.parse(xhr.responseText);
+        console.log(json);
+        results = json["results"];
 
-				for (let i = 0; i < jsonObject.results.length; i++) {
-					colorList += jsonObject.results[i];
-					if (i < jsonObject.results.length - 1) {
-						colorList += "<br />\r\n";
-					}
-				}
-
-				document.getElementsByTagName("p")[0].innerHTML = colorList;
+        $("#allContactsView").empty();
+        if (results != null) {
+          results.forEach(contact => {
+            let name = contact["name"];
+            let phone = contact["phone"];
+            let email = contact["email"];
+            
+            $("#allContactsView").append(createContactDiv(name, phone, email));
+          });
+        }
+        else {
+          $("#allContactsView").append(`
+            <div class="alert alert-warning" role="alert">
+              No contacts found :-(
+            </div>
+          `);
+        }
 			}
-		};
-		xhr.send(jsonPayload);
+		}
+    xhr.send(postJSON)
 	}
-	catch (err) {
-		document.getElementById("colorSearchResult").innerHTML = err.message;
-	}
-
+  catch (err) {
+    console.log(err);
+  }
 }
+
+// extra functions to load after the window loads
+$(window).on("load", () => {
+  $("#searchBar").on("input", () => {
+    searchContacts();
+  });
+});
