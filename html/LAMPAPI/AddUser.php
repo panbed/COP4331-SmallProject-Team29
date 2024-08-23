@@ -13,24 +13,24 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if ($conn->connect_error) {
   returnWithError($conn->connect_error);
 } else {
-    $stmt = $conn->prepare("SELECT (firstName,lastName) FROM Users WHERE login=?");
+    $stmt = $conn->prepare("SELECT firstName,lastName FROM Users WHERE login=?");
     $stmt->bind_param("s", $inData["login"]);
     $stmt->execute();
     $result = $stmt->get_result();
 
     if($row = $result->fetch_assoc()) {
-        returnWithError("User already exists, please try another Username.");
+        returnWithError("User Already Exists");
     }
     else {
-        $add = $conn->prepare("INSERT into Users (firstName,lastName,login,password) VALUES (?,?,?,?)");
+        $add = $conn->prepare("INSERT into Users (firstName,lastName,Login,Password) VALUES (?,?,?,?)");
         $add->bind_param("ssss", $firstName, $lastName, $login, $password);
         $add->execute();
         $add->close();
+        returnWithError("User Created!");
     }
 
     $stmt->close();
     $conn->close();
-    returnWithError("");
 }
 
 function getRequestInfo()
