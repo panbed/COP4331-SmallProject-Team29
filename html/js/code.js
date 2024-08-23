@@ -35,10 +35,16 @@ function doLogin()
 			{
 				let jsonObject = JSON.parse( xhr.responseText );
 				userId = jsonObject.id;
-		
-				if( userId < 1 )
-				{		
-					document.getElementById("loginResult").innerHTML = "User/Password combination incorrect";
+
+				if (userId < 1) {
+          // Print error message below the login window
+          $("#loginResult").html(`
+          <div class="p-2 m-2 d-flex alert alert-warning alert-dismissable" role="alert">
+            <div>Incorrect username or password!</div>
+            <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        `);
+
 					return;
 				}
 		
@@ -52,9 +58,13 @@ function doLogin()
 		};
 		xhr.send(jsonPayload);
 	}
-	catch(err)
-	{
-		document.getElementById("loginResult").innerHTML = err.message;
+	catch (err) {
+		$("#loginResult").html(`
+      <div class="p-2 m-2 d-flex alert alert-warning alert-dismissable" role="alert">
+        <div>${err.message}</div>
+        <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+		`);
 	}
 
 }
@@ -94,9 +104,11 @@ function readCookie()
 	{
 		window.location.href = "index.html";
 	}
-	else
-	{
-//		document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+	else {
+    document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
+    $("#userName").html(`
+      <div id="userName" class="navbar-brand" href="#">Hello, <strong>${firstName} ${lastName}</strong>!</div>
+    `);
 	}
 }
 
