@@ -17,5 +17,4 @@ services:
       MYSQL_ROOT_PASSWORD: password
     volumes:
     # maps the 'mysql_data' folder to /var/lib/mysql
-      - ./mysql:/var/lib/mysql
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
