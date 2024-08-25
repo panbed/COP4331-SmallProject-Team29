@@ -249,6 +249,7 @@ function setTheme() {
 
 // extra functions to load after the window loads
 $(function () {
+  console.log("Document ready.")
 
   // read localstorage and set options
   setTheme();
@@ -257,7 +258,7 @@ $(function () {
     searchContacts();
   });
 
-  $(document).on("keydown", (event) => {
+  $("#loginName, #loginPassword").on("keydown", (event) => {
     if (event.key === "Enter") {
       if (!$("#loginButton").prop("disabled")) {
         doLogin();
