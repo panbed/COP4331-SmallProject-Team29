@@ -11,6 +11,12 @@ if (isset($inData["limit"])) {
     // When limit is not specified, set limit to -1 (inf)
     $limit = -1;
 }
+if (isset($inData["offset"])) {
+    $limit = $inData["offset"];
+} else {
+    // When limit is not specified, set limit to -1 (inf)
+    $limit = 0;
+}
 
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
@@ -18,11 +24,11 @@ if ($conn->connect_error) {
     returnWithError($conn->connect_error);
 } else {
     if ($limit >= 0) {
-        $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=? limit ?");
-        $stmt->bind_param("ss", $userId, $limit);
+        $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=? limit ? offset ?");
+        $stmt->bind_param("sss", $userId, $limit, $offset);
     } else {
-        $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=?");
-        $stmt->bind_param("s", $userId);
+        $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=? offset ?");
+        $stmt->bind_param("ss", $userId, $offset);
     }
     $stmt->execute();
     $result = $stmt->get_result();
