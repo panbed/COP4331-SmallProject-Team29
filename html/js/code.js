@@ -151,8 +151,9 @@ function createContactDiv(name, phone, email) {
       </div>
 
       <div class="">
+        <button type="button" id="favContact" class="btn p-2 border-0 bg-transparent"><i class="bi bi-star"></i></button>
         <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button>
-        <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
+        <button type="button" id="deleteContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
     <div class="card-body">
