@@ -144,21 +144,35 @@ function addContact() {
 function createContactDiv(name, phone, email) {
   // creates a nicely styled div that looks nice in a list
   let htmlString = `
-    <div class="card mb-3">
+  <div class="card mb-3">
     <div class="card-header d-flex">
       <div class="flex-fill my-auto">
-        <span><strong>${name}</strong></span>
+        <h3 class="mb-0"><strong>${name}</strong></h3>
       </div>
 
       <div class="">
-        <button type="button" id="favContact" class="btn p-2 border-0 bg-transparent"><i class="bi bi-star"></i></button>
+        <button type="button" id="favContact" class="btn p-2""><i class="bi bi-star"></i></button>
         <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button>
         <button type="button" id="deleteContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
     <div class="card-body">
-      <p>${phone}</p>
-      <p>${email}</p>
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-telephone-fill me-1"></i>
+        <p class="mb-0">${phone}</p>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-envelope-fill me-1"></i>
+        <p class="mb-0">${email}</p>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-house-door-fill me-1"></i>
+        <p class="mb-0">${"123 Example St"}</p>
+      </div>
+      <div class="d-flex align-items-center">
+        <i class="bi bi-cake-fill me-1"></i>
+        <p class="mb-0">${"Jan 1st, 2000"}</p>
+      </div>
     </div>
   </div>
   `
