@@ -4,9 +4,9 @@ include "Config.php";
 
 $inData = getRequestInfo();
 
-$userId = $inData["UserId"];
-if (isset($inData["Limit"])) {
-    $limit = $inData["Limit"];
+$userId = $inData["userId"];
+if (isset($inData["limit"])) {
+    $limit = $inData["limit"];
 } else {
     // When limit is not specified, set limit to -1 (inf)
     $limit = -1;

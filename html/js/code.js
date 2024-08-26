@@ -181,13 +181,11 @@ function createContactDiv(name, phone, email) {
 }
 
 function showContacts() {
-  let search = "";
   let postJSON = JSON.stringify({
-    search: search,
     userId: userId
   });
 
-  let url = `${urlBase}/SearchContacts.${extension}`;
+  let url = `${urlBase}/ShowContacts.${extension}`;
   let xhr = new XMLHttpRequest();
   xhr.open("POST", url, true);
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
