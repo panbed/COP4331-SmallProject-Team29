@@ -165,6 +165,51 @@ function createContactDiv(name, phone, email) {
   return htmlString;
 }
 
+function showContacts() {
+  let search = "";
+  let postJSON = JSON.stringify({
+    search: search,
+    userId: userId
+  });
+
+  let url = `${urlBase}/SearchContacts.${extension}`;
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try {
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let json = JSON.parse(xhr.responseText);
+        console.log(json);
+        results = json["results"];
+
+        $("#allContactsView").empty();
+        if (results != null) {
+          results.forEach(contact => {
+            let name = contact["name"];
+            let phone = contact["phone"];
+            let email = contact["email"];
+
+            $("#allContactsView").append(createContactDiv(name, phone, email));
+          });
+        }
+        else {
+          $("#allContactsView").append(`
+            <div class="alert alert-warning" role="alert">
+              No contacts found :-(
+            </div>
+          `);
+        }
+      }
+    }
+    xhr.send(postJSON)
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
 function searchContacts() {
   let search = $("#searchBar").val();
   let postJSON = JSON.stringify({
