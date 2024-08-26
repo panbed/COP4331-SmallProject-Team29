@@ -313,7 +313,11 @@ $(function () {
   setTheme();
 
   $("#searchBar").on("input", () => {
-    searchContacts();
+    if ($("#searchBar").val() == "") {
+      showContacts();
+    } else {
+      searchContacts();
+    }
   });
 
   $("#loginName, #loginPassword").on("keydown", (event) => {
