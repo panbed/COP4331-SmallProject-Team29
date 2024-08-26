@@ -12,10 +12,10 @@ if (isset($inData["limit"])) {
     $limit = -1;
 }
 if (isset($inData["offset"])) {
-    $limit = $inData["offset"];
+    $offset = $inData["offset"];
 } else {
-    // When limit is not specified, set limit to -1 (inf)
-    $limit = 0;
+    // note that offset can only be used when limit is also specified
+    $offset = 0;
 }
 
 
@@ -27,8 +27,8 @@ if ($conn->connect_error) {
         $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=? limit ? offset ?");
         $stmt->bind_param("sss", $userId, $limit, $offset);
     } else {
-        $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=? offset ?");
-        $stmt->bind_param("ss", $userId, $offset);
+        $stmt = $conn->prepare("select Name,Phone,Email from Contacts where UserID=?");
+        $stmt->bind_param("s", $userId);
     }
     $stmt->execute();
     $result = $stmt->get_result();
