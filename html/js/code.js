@@ -146,7 +146,7 @@ function createContactDiv(name, phone, email) {
   <div class="card mb-3">
     <div class="card-header d-flex">
       <div class="nameContainer flex-fill my-auto">
-        <h5 class="mb-0 name"><strong>${name}</strong></h5>
+        <h6 class="mb-0 name"><strong>${name}</strong></h6>
       </div>
 
       <div class="">
@@ -155,22 +155,27 @@ function createContactDiv(name, phone, email) {
         <button type="button" id="deleteContact" class="btn"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
-    <div class="card-body">
-      <div class="d-flex align-items-center mb-1">
-        <i class="bi bi-telephone-fill me-1"></i>
-        <p class="mb-0">${phone}</p>
+    <div class="card-body d-flex">
+      <div class="my-auto pe-4 d-flex">
+        <img src="/images/default.png" class="profilePicture rounded-circle" alt="">
       </div>
-      <div class="d-flex align-items-center mb-1">
-        <i class="bi bi-envelope-fill me-1"></i>
-        <p class="mb-0">${email}</p>
-      </div>
-      <div class="d-flex align-items-center mb-1">
-        <i class="bi bi-house-door-fill me-1"></i>
-        <p class="mb-0">${"123 Example St"}</p>
-      </div>
-      <div class="d-flex align-items-center">
-        <i class="bi bi-cake-fill me-1"></i>
-        <p class="mb-0">${"Jan 1st, 2000"}</p>
+      <div class="contactInfo my-auto">
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-telephone-fill me-1"></i>
+          <p class="mb-0">${phone}</p>
+        </div>
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-envelope-fill me-1"></i>
+          <p class="mb-0">${email}</p>
+        </div>
+        <div class="d-flex align-items-center mb-1">
+          <i class="bi bi-house-door-fill me-1"></i>
+          <p class="mb-0">${"123 Example St"}</p>
+        </div>
+        <div class="d-flex align-items-center">
+          <i class="bi bi-cake-fill me-1"></i>
+          <p class="mb-0">${"Jan 1st, 2000"}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -193,7 +198,6 @@ function showContacts() {
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let json = JSON.parse(xhr.responseText);
-        console.log(json);
         results = json["results"];
 
         $("#allContactsView").empty();
@@ -281,26 +285,18 @@ function toggleThemeLocalStorage() {
 
 function setTheme() {
   let theme = localStorage.getItem("theme");
-  console.log(theme);
   if (theme == null) {
-    if (window.matchMedia) {
-      // set theme based on user's dark/light mode preference
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
-        localStorage.setItem("theme", "dark");
-      }
-      else {
-        localStorage.setItem("theme", "light");
-      }
+    // set theme based on user's dark/light mode preference on first load
+    if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+      localStorage.setItem("theme", "dark");
     }
-    // default to light mode if matchMedia attribute not available in browser
     else {
       localStorage.setItem("theme", "light");
     }
   }
+  
   // set theme based on localstorage
-  else {
-    $("html").attr("data-bs-theme", theme);
-  }
+  $("html").attr("data-bs-theme", localStorage.getItem("theme"));
 
 }
 

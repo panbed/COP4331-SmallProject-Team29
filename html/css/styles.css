@@ -1,11 +1,28 @@
 #userName {
     max-width: 60vw;
-    overflow: scroll;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .name {
     max-width: 40vw;
-    overflow: scroll;
+    overflow-y: hidden;
+    overflow-x: scroll;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.card-body .profilePicture {
+    min-width: none;
+    width: 5em;
+    height: 5em;
+}
+
+.contactInfo {
+    overflow-y: hidden;
+    overflow-x: scroll;
     white-space: nowrap;
 }
 
@@ -23,5 +40,9 @@
 }
 
 #logoutButton:hover {
-    color: rgb(255, 67, 42)
+    color: red;
+}
+
+#themeButton:hover {
+    filter: invert();
 }
