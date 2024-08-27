@@ -1,3 +1,9 @@
+* {
+    /* disable scrollbars on chrome/firefoxs */
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
 #userName {
     max-width: 60vw;
     overflow-y: hidden;
@@ -41,8 +47,4 @@
 
 #logoutButton:hover {
     color: red;
-}
-
-#themeButton:hover {
-    filter: invert();
 }

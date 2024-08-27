@@ -284,8 +284,7 @@ function toggleThemeLocalStorage() {
 }
 
 function setTheme() {
-  let theme = localStorage.getItem("theme");
-  if (theme == null) {
+  if (localStorage.getItem("theme") == null) {
     // set theme based on user's dark/light mode preference on first load
     if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
       localStorage.setItem("theme", "dark");
@@ -297,7 +296,19 @@ function setTheme() {
   
   // set theme based on localstorage
   $("html").attr("data-bs-theme", localStorage.getItem("theme"));
+  setThemeIcon();
+}
 
+function setThemeIcon() {
+  if (localStorage.getItem("theme") == "dark") {
+    // currently in dark mode, icon should show dark mode (moon)
+    // <i class=""></i>
+    $("#themeIcon").attr("class", "bi bi-moon-fill")
+  }
+  else {
+    // otherwise, assume we're in light mode and we need to show light mode icon
+    $("#themeIcon").attr("class", "bi bi-sun-fill")
+  }
 }
 
 // extra functions to load after the window loads
@@ -306,6 +317,7 @@ $(function () {
 
   // read localstorage and set options
   setTheme();
+  setThemeIcon();
 
   $("#searchBar").on("input", () => {
     if ($("#searchBar").val() == "") {
