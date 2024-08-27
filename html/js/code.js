@@ -144,25 +144,83 @@ function addContact() {
 function createContactDiv(name, phone, email) {
   // creates a nicely styled div that looks nice in a list
   let htmlString = `
-    <div class="card mb-3">
+  <div class="card mb-3">
     <div class="card-header d-flex">
       <div class="flex-fill my-auto">
-        <span><strong>${name}</strong></span>
+        <h3 class="mb-0"><strong>${name}</strong></h3>
       </div>
 
       <div class="">
+        <button type="button" id="favContact" class="btn p-2""><i class="bi bi-star"></i></button>
         <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button>
-        <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
+        <button type="button" id="deleteContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
     <div class="card-body">
-      <p>${phone}</p>
-      <p>${email}</p>
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-telephone-fill me-1"></i>
+        <p class="mb-0">${phone}</p>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-envelope-fill me-1"></i>
+        <p class="mb-0">${email}</p>
+      </div>
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-house-door-fill me-1"></i>
+        <p class="mb-0">${"123 Example St"}</p>
+      </div>
+      <div class="d-flex align-items-center">
+        <i class="bi bi-cake-fill me-1"></i>
+        <p class="mb-0">${"Jan 1st, 2000"}</p>
+      </div>
     </div>
   </div>
   `
 
   return htmlString;
+}
+
+function showContacts() {
+  let postJSON = JSON.stringify({
+    userId: userId
+  });
+
+  let url = `${urlBase}/ShowContacts.${extension}`;
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try {
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        let json = JSON.parse(xhr.responseText);
+        console.log(json);
+        results = json["results"];
+
+        $("#allContactsView").empty();
+        if (results != null) {
+          results.forEach(contact => {
+            let name = contact["name"];
+            let phone = contact["phone"];
+            let email = contact["email"];
+
+            $("#allContactsView").append(createContactDiv(name, phone, email));
+          });
+        }
+        else {
+          $("#allContactsView").append(`
+            <div class="alert alert-warning" role="alert">
+              No contacts found :-(
+            </div>
+          `);
+        }
+      }
+    }
+    xhr.send(postJSON)
+  }
+  catch (err) {
+    console.log(err);
+  }
 }
 
 function searchContacts() {
@@ -249,15 +307,20 @@ function setTheme() {
 
 // extra functions to load after the window loads
 $(function () {
+  console.log("Document ready.")
 
   // read localstorage and set options
   setTheme();
 
   $("#searchBar").on("input", () => {
-    searchContacts();
+    if ($("#searchBar").val() == "") {
+      showContacts();
+    } else {
+      searchContacts();
+    }
   });
 
-  $(document).on("keydown", (event) => {
+  $("#loginName, #loginPassword").on("keydown", (event) => {
     if (event.key === "Enter") {
       if (!$("#loginButton").prop("disabled")) {
         doLogin();
