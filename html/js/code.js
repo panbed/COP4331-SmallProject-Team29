@@ -94,8 +94,7 @@ function readCookie() {
     window.location.href = "index.html";
   }
   else {
-    document.getElementById("userName").innerHTML = "Logged in as " + firstName + " " + lastName;
-    $("#userName").html(`
+    $("#userNameContainer").html(`
       <div id="userName" class="navbar-brand" href="#">Hello, <strong>${firstName} ${lastName}</strong>!</div>
     `);
   }
@@ -146,14 +145,14 @@ function createContactDiv(name, phone, email) {
   let htmlString = `
   <div class="card mb-3">
     <div class="card-header d-flex">
-      <div class="flex-fill my-auto">
-        <h3 class="mb-0"><strong>${name}</strong></h3>
+      <div class="nameContainer flex-fill my-auto">
+        <h5 class="mb-0 name"><strong>${name}</strong></h5>
       </div>
 
       <div class="">
-        <button type="button" id="favContact" class="btn p-2""><i class="bi bi-star"></i></button>
-        <button type="button" id="editContact" class="btn btn-secondary"><i class="bi bi-pencil-square"></i></button>
-        <button type="button" id="deleteContact" class="btn btn-secondary"><i class="bi bi-trash3-fill"></i></button>
+        <button type="button" id="favContact" class="btn p-2"><i class="bi bi-star"></i></button>
+        <button type="button" id="editContact" class="btn"><i class="bi bi-pencil-square"></i></button>
+        <button type="button" id="deleteContact" class="btn"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
     <div class="card-body">

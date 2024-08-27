@@ -1,0 +1,27 @@
+#userName {
+    max-width: 60vw;
+    overflow: scroll;
+}
+
+.name {
+    max-width: 40vw;
+    overflow: scroll;
+    white-space: nowrap;
+}
+
+/* Button hover colors */
+#deleteContact:hover {
+    color: red;
+}
+
+#editContact:hover {
+    color: blue;
+}
+
+#favContact:hover {
+    color: darkgoldenrod;
+}
+
+#logoutButton:hover {
+    color: rgb(255, 67, 42)
+}
