@@ -140,10 +140,18 @@ function addContact() {
   }
 }
 
-function createContactDiv(name, phone, email) {
+function deleteContact(id) {
+  // todo...
+}
+
+function showDeleteModal(id) {
+  
+}
+
+function createContactDiv(id, name, phone, email) {
   // creates a nicely styled div that looks nice in a list
   let htmlString = `
-  <div class="card mb-3">
+  <div id="contact-${id}" class="card mb-3">
     <div class="card-header d-flex">
       <div class="nameContainer flex-fill my-auto">
         <h6 class="mb-0 name"><strong>${name}</strong></h6>
@@ -203,11 +211,12 @@ function showContacts() {
         $("#allContactsView").empty();
         if (results != null) {
           results.forEach(contact => {
+            let id = contact["id"];
             let name = contact["name"];
             let phone = contact["phone"];
             let email = contact["email"];
 
-            $("#allContactsView").append(createContactDiv(name, phone, email));
+            $("#allContactsView").append(createContactDiv(id, name, phone, email));
           });
         }
         else {
@@ -248,11 +257,12 @@ function searchContacts() {
         $("#allContactsView").empty();
         if (results != null) {
           results.forEach(contact => {
+            let id = contact["id"];
             let name = contact["name"];
             let phone = contact["phone"];
             let email = contact["email"];
 
-            $("#allContactsView").append(createContactDiv(name, phone, email));
+            $("#allContactsView").append(createContactDiv(id, name, phone, email));
           });
         }
         else {

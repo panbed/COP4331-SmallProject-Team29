@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 	returnWithError($conn->connect_error);
 } else {
 	$stmt = $conn->prepare(
-		"select Name,Phone,Email from Contacts where (Name like ? or Phone like ? or Email like ?) and UserID=?"
+		"select ID,Name,Phone,Email from Contacts where (Name like ? or Phone like ? or Email like ?) and UserID=?"
 	);
 	$searchQuery = "%" . $inData["search"] . "%";
 	$stmt->bind_param("ssss", $searchQuery, $searchQuery, $searchQuery, $inData["userId"]);
@@ -23,6 +23,7 @@ if ($conn->connect_error) {
 	$searchCount = 0;
 	while ($row = $result->fetch_assoc()) {
 		$jsonResult = array();
+		$jsonResult["id"] = $row["ID"];
 		$jsonResult["name"] = $row["Name"];
 		$jsonResult["phone"] = $row["Phone"];
 		$jsonResult["email"] = $row["Email"];
