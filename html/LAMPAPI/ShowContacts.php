@@ -24,10 +24,10 @@ if ($conn->connect_error) {
     returnWithError($conn->connect_error);
 } else {
     if ($limit >= 0) {
-        $stmt = $conn->prepare("select ID,Name,Phone,Email from Contacts where UserID=? limit ? offset ?");
+        $stmt = $conn->prepare("select ID,Name,Phone,Email,Picture,Address,Birthday,Notes from Contacts where UserID=? limit ? offset ?");
         $stmt->bind_param("sss", $userId, $limit, $offset);
     } else {
-        $stmt = $conn->prepare("select ID,Name,Phone,Email from Contacts where UserID=?");
+        $stmt = $conn->prepare("select ID,Name,Phone,Email,Picture,Address,Birthday,Notes from Contacts where UserID=?");
         $stmt->bind_param("s", $userId);
     }
     $stmt->execute();
@@ -41,6 +41,10 @@ if ($conn->connect_error) {
         $jsonResult["name"] = $row["Name"];
         $jsonResult["phone"] = $row["Phone"];
         $jsonResult["email"] = $row["Email"];
+        $jsonResult["picture"] = $row["Picture"];
+        $jsonResult["address"] = $row["Address"];
+        $jsonResult["birthday"] = $row["Birthday"];
+        $jsonResult["notes"] = $row["Notes"];
 
         $resultCount++;
         array_push($postJSON, $jsonResult);
