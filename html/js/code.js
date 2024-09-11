@@ -108,6 +108,39 @@ function doLogout() {
   window.location.href = "index.html";
 }
 
+function addUser() {
+  let firstName = $("#regFirstName").val();
+  let lastName = $("#regLastName").val();
+  let login = $("#regUserName").val();
+  let password = $("#regPassword").val();
+
+  let json = JSON.stringify({
+    firstName: firstName,
+    lastName: lastName,
+    login: login,
+    password: password
+  });
+
+  let url = `${urlBase}/AddUser.${extension}`;
+  
+  let xhr = new XMLHttpRequest();
+  
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try {
+    xhr.onreadystatechange = function () {
+      if(this.readyState == 4 && this.status == 200) {
+        $("#createAccountResult").text("Account created successfully!");
+      }
+    };
+    xhr.send(json);
+  }
+  catch(err) {
+    $("#createAccountResult").text(err.message);
+  }
+}
+
 function addContact() {
   // Get necessary information for a contact from inputs
   let name = $("#contactNameInput").val();

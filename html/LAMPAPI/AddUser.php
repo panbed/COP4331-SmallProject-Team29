@@ -26,7 +26,6 @@ if ($conn->connect_error) {
         $add->bind_param("ssss", $firstName, $lastName, $login, $password);
         $add->execute();
         $add->close();
-        returnWithError("User Created!");
     }
 
     $stmt->close();
