@@ -131,7 +131,13 @@ function addUser() {
   try {
     xhr.onreadystatechange = function () {
       if(this.readyState == 4 && this.status == 200) {
-        $("#createAccountResult").text("Account created successfully!");
+        let jsonObject = JSON.parse(xhr.responseText);
+        if(jsonObject.error) {
+          $("#createAccountResult").text(jsonObject.error);
+        }
+        else {
+          $("#createAccountResult").text("Account created successfully!");
+        }
       }
     };
     xhr.send(json);
@@ -162,6 +168,7 @@ function addContact() {
 
   try {
     xhr.onreadystatechange = function () {
+
       if (this.readyState == 4 && this.status == 200) {
         $("#colorAddResult").text("Contact has been added");
       }
