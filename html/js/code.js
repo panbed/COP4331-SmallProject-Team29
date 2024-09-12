@@ -189,16 +189,21 @@ function addUser() {
 }
 
 function addContact() {
+  console.log("Trying to add contact...");
   // Get necessary information for a contact from inputs
   let name = $("#fullNameInput").val();
   let phone = $("#phoneInput").val();
   let email = $("#emailInput").val();
+  let address = $("#addressInput").val();
+  let birthday = $("#birthdayInput").val();
 
   // Create JSON object to send to database
   let json = JSON.stringify({
     name: name,
     phone: phone,
     email: email,
+    address: address,
+    birthday: birthday,
     userId: userId
   });
 
@@ -211,13 +216,33 @@ function addContact() {
     xhr.onreadystatechange = function () {
 
       if (this.readyState == 4 && this.status == 200) {
-        $("#colorAddResult").text("Contact has been added");
+        $("#toasts").html(`
+        <div class="toast show">
+          <div class="toast-header">
+            <strong class="me-auto">Success!</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+            ${name} was added to your contacts!
+          </div>
+        </div>
+      `)
       }
     };
     xhr.send(json);
   }
   catch (err) {
-    $("#colorAddResult").text(err.message);
+    $("#toasts").html(`
+    <div class="toast show">
+      <div class="toast-header">
+        <strong class="me-auto">Incorrect username or password!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        ${err.message}
+      </div>
+    </div>
+  `)
   }
 }
 
@@ -431,11 +456,13 @@ $(function () {
     console.log("contact modal shown!");
   });
 
-
+  // bro..
+  const addContactForm = $(document).find("#addContactForm")[0];
+  addContactForm.addEventListener('submit', event => {
+    event.preventDefault();
+  })
 
   const forms = $(document).find('.needs-validation')
-
-  console.log(forms);
 
   // Loop over them and prevent submission
   Array.from(forms).forEach(form => {
