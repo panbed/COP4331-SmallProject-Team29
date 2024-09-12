@@ -27,6 +27,7 @@ CREATE TABLE `COP4331`.`Contacts` (
 	`Birthday` DATE ,
 	`Notes` VARCHAR(255) ,
 	`UserID` INT NOT NULL DEFAULT '0' , 
+	`Favorite` BOOLEAN NOT NULL DEFAULT '0',
 	PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;
 
