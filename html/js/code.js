@@ -458,9 +458,11 @@ $(function () {
 
   // bro..
   const addContactForm = $(document).find("#addContactForm")[0];
-  addContactForm.addEventListener('submit', event => {
-    event.preventDefault();
-  })
+  if (addContactForm) {
+    addContactForm.addEventListener('submit', event => {
+      event.preventDefault();
+    })
+  }
 
   const forms = $(document).find('.needs-validation')
 
