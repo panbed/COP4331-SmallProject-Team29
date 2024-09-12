@@ -15,8 +15,11 @@
 	}
 	else
 	{
-		$stmt = $conn->prepare("SELECT ID,firstName,lastName FROM Users WHERE Login=? AND Password =?");
-		$stmt->bind_param("ss", $inData["login"], $inData["password"]);
+    $stmt = $conn->prepare("SELECT ID,firstName,lastName FROM Users WHERE Login=? AND Password =?");
+
+    $secure = md5($inData["password"]);
+
+		$stmt->bind_param("ss", $inData["login"], $secure);
 		$stmt->execute();
 		$result = $stmt->get_result();
 

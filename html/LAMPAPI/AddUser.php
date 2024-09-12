@@ -8,6 +8,7 @@ $firstName = $inData["firstName"];
 $lastName = $inData["lastName"];
 $login = $inData["login"];
 $password = $inData["password"];
+$secure = md5($password);
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if ($conn->connect_error) {
@@ -23,7 +24,7 @@ if ($conn->connect_error) {
     }
     else {
         $stmt = $conn->prepare("INSERT into Users (firstName,lastName,Login,Password) VALUES (?,?,?,?)");
-        $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
+        $stmt->bind_param("ssss", $firstName, $lastName, $login, $secure);
         $stmt->execute();
         returnWithError("");
     }
