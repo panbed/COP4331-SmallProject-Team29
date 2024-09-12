@@ -23,37 +23,52 @@
 
 <body>
   <div class="d-flex flex-column container align-items-center justify-content-center vh-100">
-    <form id="loginDiv" class="card">
-      <div class="card-header text-center">
-        <h1 aria-label="Contact Manager">
-          <!-- <i class="bi bi-person-rolodex"></i> -->
-          :-) <br>
-          Account Creation
-        </h1>
+    <form id="loginDiv d-flex" class="card needs-validation" onsubmit="addUser();" novalidate>
+      <div class="d-flex card-header text-center justify-content-center align-items-center">
+        <!-- <h1 aria-label="Contact Manager">
+          <i class="bi bi-person-rolodex"></i>
+        </h1> -->
+        <h4 class="my-auto p-3">Sign Up</h4>
       </div>
       <div class="card-body">
         <div class="mb-3">
           <label for="regFirstName" class="form-label">First Name</label>
-          <input type="text" id="regFirstName" class="form-control" />
+          <input type="text" id="regFirstName" class="form-control" required>
+          <div class="invalid-feedback">
+            Please enter your first name.
+          </div>
         </div>
         <div class="mb-3">
           <label for="regLastName" class="form-label">Last Name</label>
-          <input type="text" id="regLastName" class="form-control" />
+          <input type="text" id="regLastName" class="form-control" required>
+          <div class="invalid-feedback">
+            Please enter your last name.
+          </div>
         </div>
         <div class="mb-3">
           <label for="regUserName" class="form-label">Username</label>
-          <input type="text" id="regUserName" class="form-control" />
+          <input type="text" id="regUserName" class="form-control" required>
+          <div class="invalid-feedback">
+            Please enter your user name.
+          </div>
         </div>
         <div class="mb-3">
           <label for="regPassword" class="form-label">Password</label>
-          <input type="password" id="regPassword" class="form-control" />
+          <input type="password" id="regPassword" class="form-control" required>
+          <div class="invalid-feedback">
+            Please enter your password.
+          </div>
         </div>
-          <button type="button" id="createAccountButton" class="btn btn-primary" onclick="addUser();">Create Account</button>
+          <input type="submit" id="createAccountButton" class="btn btn-primary" value="Create Account" onsubmit="addUser();"></input>
           <button type="button" id="logoutButton" onclick="window.location.href = 'index.html';" class="btn btn-secondary">Back to Sign In</button>
         </div>
-      </div>
-
+      </div>      
     </form>
+
+    <div id="toasts" class="toast-container p-3 position-fixed bottom-0 start-50 translate-middle-x">
+    </div>
+    
+
     <div id="createAccountResult"></div>
   </div>
 

@@ -34,14 +34,27 @@ function doLogin() {
 
         if (userId < 1) {
           // Print error message below the login window
-          $("#loginResult").html(`
+          $("#toasts").html(`
             <div class="p-2 m-2 d-flex alert alert-warning alert-dismissable" role="alert">
               <div>Incorrect username or password!</div>
               <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           `);
 
+          $("#toasts").html(`
+          <div class="toast show">
+            <div class="toast-header">
+              <strong class="me-auto">Incorrect username or password!</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              Please ensure you entered your information correctly, or sign up if needed.
+            </div>
+          </div>
+        `)
+
           return;
+          
         }
 
         firstName = jsonObject.firstName;
@@ -114,38 +127,56 @@ function addUser() {
   let login = $("#regUserName").val();
   let password = $("#regPassword").val();
 
-  let json = JSON.stringify({
-    firstName: firstName,
-    lastName: lastName,
-    login: login,
-    password: password
-  });
-
-  let url = `${urlBase}/AddUser.${extension}`;
-  
-  let xhr = new XMLHttpRequest();
-  
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-
-  try {
-    xhr.onreadystatechange = function () {
-      if(this.readyState == 4 && this.status == 200) {
-        $("#createAccountResult").text("Account created successfully!");
-      }
-    };
-    xhr.send(json);
+  if (!firstName || !lastName || !login || !password) {
+    console.log("missing information! not creating contact...")
   }
-  catch(err) {
-    $("#createAccountResult").text(err.message);
+  else {
+    let json = JSON.stringify({
+      firstName: firstName,
+      lastName: lastName,
+      login: login,
+      password: password
+    });
+  
+    let url = `${urlBase}/AddUser.${extension}`;
+    
+    let xhr = new XMLHttpRequest();
+    
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+  
+    try {
+      xhr.onreadystatechange = function () {
+        if(this.readyState == 4 && this.status == 200) {
+          // $("#createAccountResult").text("Account created successfully!");
+          $("#toasts").append(`
+            <div class="toast show">
+              <div class="toast-header">
+                <strong class="me-auto">Successfully created account!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                Account has been created, redirecting to login page...
+              </div>
+            </div>
+          `)
+
+          setTimeout(() => window.location.href = "index.html", 3000);
+        }
+      };
+      xhr.send(json);
+    }
+    catch(err) {
+      $("#createAccountResult").text(err.message);
+    }
   }
 }
 
 function addContact() {
   // Get necessary information for a contact from inputs
-  let name = $("#contactNameInput").val();
-  let phone = $("#contactPhoneInput").val();
-  let email = $("#contactEmailInput").val();
+  let name = $("#fullNameInput").val();
+  let phone = $("#phoneInput").val();
+  let email = $("#emailInput").val();
 
   // Create JSON object to send to database
   let json = JSON.stringify({
@@ -377,5 +408,29 @@ $(function () {
       }
     }
   });
+
+  // handle add contact modal
+  $("#addContactModal").on("show.bs.modal", e => {
+    console.log("contact modal shown!");
+  });
+
+
+
+  const forms = $(document).find('.needs-validation')
+
+  console.log(forms);
+
+  // Loop over them and prevent submission
+  Array.from(forms).forEach(form => {
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      if (!form.checkValidity()) {
+        event.stopPropagation();
+      }
+
+      form.classList.add('was-validated')
+    }, false)
+  })
+
 
 })

@@ -54,7 +54,7 @@
         </div>
 
         <div class="btn-group" role="group" aria-label="Tools">
-          <button type="button" id="addContactButton" class="btn btn-primary" onclick="console.log(`in progress...`);">
+          <button type="button" id="addContactButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContactModal" onclick="console.log(`in progress...`);">
             <i class="bi bi-person-fill-add"></i>
           </button>
           <button type="button" id="settingsButton" class="btn btn-primary" onclick="console.log(`in progress...`);">
@@ -65,6 +65,49 @@
 
     </div>
   </nav>
+
+  <div class="modal fade" id="addContactModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="addContactModalLabel">Add Contact</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+
+        <div class="modal-body">
+          <form>
+            <!-- Form Inputs -->
+            <div class="mb-3">
+              <label for="fullNameInput" class="col-form-label">Full Name</label>
+              <input type="text" class="form-control" id="fullNameInput">
+            </div>
+            <div class="mb-3">
+              <label for="phoneInput" class="col-form-label">Phone Number</label>
+              <input type="tel" class="form-control" id="phoneInput">
+            </div>
+            <div class="mb-3">
+              <label for="emailInput" class="col-form-label">E-mail</label>
+              <input type="email" class="form-control" id="emailInput">
+            </div>
+            <div class="mb-3">
+              <label for="addressInput" class="col-form-label">Address</label>
+              <input type="text" class="form-control" id="addressInput">
+            </div>
+            <div class="mb-3">
+              <label for="birthdayInput" class="col-form-label">Birthday</label>
+              <input type="date" class="form-control" id="birthdayInput">
+            </div>
+          </form>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Add Contact</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div id="allContactsView" class="container">
   </div>
