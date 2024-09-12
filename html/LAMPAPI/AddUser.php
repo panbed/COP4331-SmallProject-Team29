@@ -22,10 +22,10 @@ if ($conn->connect_error) {
         returnWithError("User Already Exists");
     }
     else {
-        $add = $conn->prepare("INSERT into Users (firstName,lastName,Login,Password) VALUES (?,?,?,?)");
-        $add->bind_param("ssss", $firstName, $lastName, $login, $password);
-        $add->execute();
-        $add->close();
+        $stmt = $conn->prepare("INSERT into Users (firstName,lastName,Login,Password) VALUES (?,?,?,?)");
+        $stmt->bind_param("ssss", $firstName, $lastName, $login, $password);
+        $stmt->execute();
+        returnWithError("");
     }
 
     $stmt->close();

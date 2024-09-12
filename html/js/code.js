@@ -148,20 +148,36 @@ function addUser() {
     try {
       xhr.onreadystatechange = function () {
         if(this.readyState == 4 && this.status == 200) {
-          // $("#createAccountResult").text("Account created successfully!");
-          $("#toasts").append(`
-            <div class="toast show">
-              <div class="toast-header">
-                <strong class="me-auto">Successfully created account!</strong>
-                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          let jsonObject = JSON.parse(xhr.responseText);
+          if(jsonObject.error) {
+            $("#toasts").append(`
+              <div class="toast show">
+                <div class="toast-header">
+                  <strong class="me-auto">An error has occured!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  ${jsonObject.error}
+                </div>
               </div>
-              <div class="toast-body">
-                Account has been created, redirecting to login page...
+          `)
+          }
+          else {
+            // $("#createAccountResult").text("Account created successfully!");
+            $("#toasts").append(`
+              <div class="toast show">
+                <div class="toast-header">
+                  <strong class="me-auto">Successfully created account!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  Account has been created, redirecting to login page...
+                </div>
               </div>
-            </div>
           `)
 
-          setTimeout(() => window.location.href = "index.html", 3000);
+            setTimeout(() => window.location.href = "index.html", 3000);
+          }
         }
       };
       xhr.send(json);
@@ -193,6 +209,7 @@ function addContact() {
 
   try {
     xhr.onreadystatechange = function () {
+
       if (this.readyState == 4 && this.status == 200) {
         $("#colorAddResult").text("Contact has been added");
       }
