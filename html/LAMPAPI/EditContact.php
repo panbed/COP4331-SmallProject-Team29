@@ -12,14 +12,15 @@ $picture = $inData["picture"];
 $addr = $inData["address"];
 $birthday = $inData["birthday"];
 $notes = $inData["notes"];
+$favorite = $inData["favorite"];
 
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if ($conn->connect_error) {
   returnWithError($conn->connect_error);
 } else {
-  $stmt = $conn->prepare("UPDATE Contacts SET Name=?, Phone=?, Email=?, Picture=?, Address=?, Birthday=?, Notes=? WHERE ID=?");
-  $stmt->bind_param("sssssssd", $name, $phone, $email, $picture, $addr, $birthday, $notes, $id);
+  $stmt = $conn->prepare("UPDATE Contacts SET Name=?, Phone=?, Email=?, Picture=?, Address=?, Birthday=?, Notes=?, Favorite=? WHERE ID=?");
+  $stmt->bind_param("sssssssid", $name, $phone, $email, $picture, $addr, $birthday, $notes, $favorite, $id);
   if (!$stmt->execute()) {
     returnWithError("Unable to edit contact.");
   }
