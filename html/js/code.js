@@ -54,7 +54,7 @@ function doLogin() {
         `)
 
           return;
-          
+
         }
 
         firstName = jsonObject.firstName;
@@ -137,14 +137,14 @@ function addUser() {
       login: login,
       password: password
     });
-  
+
     let url = `${urlBase}/AddUser.${extension}`;
-    
+
     let xhr = new XMLHttpRequest();
-    
+
     xhr.open("POST", url, true);
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-  
+
     try {
       xhr.onreadystatechange = function () {
         if(this.readyState == 4 && this.status == 200) {
@@ -251,7 +251,7 @@ function deleteContact(id) {
 }
 
 function showDeleteModal(id) {
-  
+
 }
 
 function createContactDiv(id, name, phone, email) {
@@ -298,7 +298,7 @@ function createContactDiv(id, name, phone, email) {
   return htmlString;
 }
 
-function showContacts() {
+function showContacts(page = 1) {
   let postJSON = JSON.stringify({
     userId: userId
   });
@@ -313,25 +313,66 @@ function showContacts() {
       if (this.readyState == 4 && this.status == 200) {
         let json = JSON.parse(xhr.responseText);
         results = json["results"];
+        num_contacts = results.length
+        page_length = 15
+        num_pages = Math.ceil(num_contacts / page_length)
+        starting_i = (page-1)*page_length
+        ending_i = starting_i + 11
 
-        $("#allContactsView").empty();
-        if (results != null) {
-          results.forEach(contact => {
-            let id = contact["id"];
-            let name = contact["name"];
-            let phone = contact["phone"];
-            let email = contact["email"];
+        if (ending_i > num_contacts) {
+          ending_i = num_contacts
+        }
+        sendContactsToPage(results.slice(starting_i, ending_i))
 
-            $("#allContactsView").append(createContactDiv(id, name, phone, email));
-          });
+        num_page_buttons = Math.min(num_pages, 24)
+
+        if (page == 1) {
+          li1_class = "page-item disabled"
+        } else {
+          li1_class = "page-item"
         }
-        else {
-          $("#allContactsView").append(`
-            <div class="alert alert-warning" role="alert">
-              No contacts found :-(
-            </div>
-          `);
+
+        let htmlString = `
+          <nav>
+            <ul class="pagination justify-content-center">
+              <li class="${li1_class}">
+                <a class="page-link" href="#" onclick="showContacts(${page-1})" tabindex="-1">Previous</a>
+              </li>
+        `
+
+        first_page_button = Math.max(1, page - Math.floor(num_page_buttons / 2))
+        last_page_button = Math.min(num_pages, page + Math.floor(num_page_buttons /2) - 1)
+
+        for (let i = first_page_button; i <= last_page_button; i++) {
+          if (i == page) {
+            li_class = "page-item active"
+          } else {
+            li_class = "page-item"
+          }
+          htmlString += `
+              <li class="${li_class}">
+                <a class="page-link" href="#" onclick="showContacts(${i})">${i}</a>
+              </li>
+          `
         }
+
+        if (page == num_pages) {
+          lie_class = "page-item disabled"
+        } else {
+          lie_class = "page-item"
+        }
+
+        htmlString += `
+              <li class="${lie_class}">
+                <a class="page-link" href="#" onclick="showContacts(${page+1})" tabindex="-1">Next</a>
+              </li>
+            </ul>
+          </nav>
+        `
+
+        $("#contactsNav").empty()
+        $("#contactsNav").append(htmlString);
+
       }
     }
     xhr.send(postJSON)
@@ -359,31 +400,35 @@ function searchContacts() {
         let json = JSON.parse(xhr.responseText);
         console.log(json);
         results = json["results"];
-
-        $("#allContactsView").empty();
-        if (results != null) {
-          results.forEach(contact => {
-            let id = contact["id"];
-            let name = contact["name"];
-            let phone = contact["phone"];
-            let email = contact["email"];
-
-            $("#allContactsView").append(createContactDiv(id, name, phone, email));
-          });
-        }
-        else {
-          $("#allContactsView").append(`
-            <div class="alert alert-warning" role="alert">
-              No contacts found :-(
-            </div>
-          `);
-        }
+        sendContactsToPage(results)
       }
     }
     xhr.send(postJSON)
   }
   catch (err) {
     console.log(err);
+  }
+}
+
+function sendContactsToPage(contacts) {
+  $("#allContactsView").empty();
+  if (contacts != null) {
+    contacts.forEach(contact => {
+      let id = contact["id"];
+      let name = contact["name"];
+      let phone = contact["phone"];
+      let email = contact["email"];
+
+      $("#allContactsView").append(createContactDiv(id, name, phone, email));
+    });
+  }
+
+  else {
+    $("#allContactsView").append(`
+      <div class="alert alert-warning" role="alert">
+        No contacts found :-(
+      </div>
+    `);
   }
 }
 
@@ -409,7 +454,7 @@ function setTheme() {
       localStorage.setItem("theme", "light");
     }
   }
-  
+
   // set theme based on localstorage
   $("html").attr("data-bs-theme", localStorage.getItem("theme"));
   setThemeIcon();

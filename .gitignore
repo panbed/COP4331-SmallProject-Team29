@@ -1,3 +1,4 @@
 # exclude sql data
 mysql/*
 jsconfig.json
+.vscode
