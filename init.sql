@@ -2,31 +2,31 @@ CREATE DATABASE COP4331;
 USE COP4331;
 
 -- Create "Users" table
-CREATE TABLE `COP4331`.`Users` ( 
-	`ID` INT NOT NULL AUTO_INCREMENT , 
-	`DateCreated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
-	`DateLastLoggedIn` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP , 
-	`FirstName` VARCHAR(50) NOT NULL DEFAULT '' , 
-	`LastName` VARCHAR(50) NOT NULL DEFAULT '' , 
-	`Login` VARCHAR(50) NOT NULL DEFAULT '' , 
-	`Password` VARCHAR(255) NOT NULL DEFAULT '' , 
+CREATE TABLE `COP4331`.`Users` (
+	`ID` INT NOT NULL AUTO_INCREMENT ,
+	`DateCreated` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+	`DateLastLoggedIn` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+	`FirstName` VARCHAR(50) NOT NULL DEFAULT '' ,
+	`LastName` VARCHAR(50) NOT NULL DEFAULT '' ,
+	`Login` VARCHAR(50) NOT NULL DEFAULT '' ,
+	`Password` VARCHAR(255) NOT NULL DEFAULT '' ,
 	PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;
 
 -- Create example user
-INSERT INTO Users (FirstName,LastName,Login,Password) VALUES ('Rick','Leinecker','RickL','COP4331');
+INSERT INTO Users (FirstName,LastName,Login,Password) VALUES ('Rick','Leinecker','RickL', MD5('COP4331'));
 
 -- Create "Contacts" table
-CREATE TABLE `COP4331`.`Contacts` ( 
-	`ID` INT NOT NULL AUTO_INCREMENT , 
-	`Name` VARCHAR(50) NOT NULL DEFAULT '' , 
-	`Phone` VARCHAR(50) , 
-	`Email` VARCHAR(50) , 
-	`Picture` VARCHAR(255) , 
-	`Address` VARCHAR(50) , 
+CREATE TABLE `COP4331`.`Contacts` (
+	`ID` INT NOT NULL AUTO_INCREMENT ,
+	`Name` VARCHAR(50) NOT NULL DEFAULT '' ,
+	`Phone` VARCHAR(50) ,
+	`Email` VARCHAR(50) ,
+	`Picture` VARCHAR(255) ,
+	`Address` VARCHAR(50) ,
 	`Birthday` DATE ,
 	`Notes` VARCHAR(255) ,
-	`UserID` INT NOT NULL DEFAULT '0' , 
+	`UserID` INT NOT NULL DEFAULT '0' ,
 	`Favorite` BOOLEAN NOT NULL DEFAULT '0',
 	PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;
