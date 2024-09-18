@@ -10,13 +10,16 @@ $email = $inData["email"];
 $address = $inData["address"];
 $birthday = $inData["birthday"];
 $userId = $inData["userId"];
+$fav = $inData["favorite"];
+$pic = $inData["picture"];
+$notes = $inData["notes"];
 
 $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if ($conn->connect_error) {
   returnWithError($conn->connect_error);
 } else {
-  $stmt = $conn->prepare("INSERT into Contacts (Name,Phone,Email,Address,Birthday,UserID) VALUES (?,?,?,?,?,?)");
-  $stmt->bind_param("ssssss", $name, $phone, $email, $address, $birthday, $userId);
+  $stmt = $conn->prepare("INSERT into Contacts (Name,Phone,Email,Address,Birthday,UserID,Favorite,Picture,Notes) VALUES (?,?,?,?,?,?,?,?,?)");
+  $stmt->bind_param("ssssssiss", $name, $phone, $email, $address, $birthday, $userId, $fav, $pic, $notes);
   $stmt->execute();
   $stmt->close();
   $conn->close();
