@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 	returnWithError($conn->connect_error);
 } else {
 	$stmt = $conn->prepare(
-		"select ID,Name,Phone,Email,Birthday,Address,Picture,Notes,Favorite from Contacts where (Name like ? or Phone like ? or Email like ?) and UserID=?"
+		"select ID,Name,Phone,Email,Birthday,Address,Picture,Notes,Favorite from Contacts where (Name like ? or Phone like ? or Email like ?) and UserID=? ORDER BY Favorite DESC"
 	);
 	$searchQuery = "%" . $inData["search"] . "%";
 	$stmt->bind_param("ssss", $searchQuery, $searchQuery, $searchQuery, $inData["userId"]);
