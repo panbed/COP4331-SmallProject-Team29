@@ -75,7 +75,6 @@ function doLogin() {
       </div>
 		`);
   }
-
 }
 
 function saveCookie() {
@@ -282,16 +281,29 @@ function showDeleteModal(id) {
 function createContactDiv(id, name, phone, email, picture, address, birthday, notes, favorite) {
   // creates a nicely styled div that looks nice in a list
   let htmlString = `
-  <div id="contact-${id}" class="card mb-3">
+  <div id="contact-${id}" class="card mb-3" data-contact-id="${id}">
     <div class="card-header d-flex">
       <div class="nameContainer flex-fill my-auto">
         <h6 class="mb-0 name"><strong>${name}</strong></h6>
       </div>
 
       <div class="">
-        <button type="button" id="favContact" class="btn p-2"><i class="bi bi-star"></i></button>
-        <button type="button" id="editContact" class="btn"><i class="bi bi-pencil-square"></i></button>
-        <button type="button" id="deleteContact" class="btn"><i class="bi bi-trash3-fill"></i></button>
+  `
+
+  if (favorite == false) {
+    htmlString += `
+      <button type="button" onclick="toggleFavorite(${id}, ${favorite})" id="favContact-${id}" class="btn p-2"><i class="bi bi-star"></i></button>
+    `
+  }
+  else {
+    htmlString += `
+      <button type="button" onclick="toggleFavorite(${id}, ${favorite})" id="favContact-${id}" class="btn p-2"><i class="bi bi-star-fill"></i></button>
+    `
+  }
+
+  htmlString += `
+        <button type="button" id="editContact-${id}" class="btn"><i class="bi bi-pencil-square"></i></button>
+        <button type="button" id="deleteContact-${id}" class="btn"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
   `
@@ -479,6 +491,41 @@ function searchContacts() {
       }
     }
     xhr.send(postJSON)
+  }
+  catch (err) {
+    console.log(err);
+  }
+}
+
+function toggleFavorite(id, favoriteStatus) {
+  let json = JSON.stringify({
+    id: id,
+    favorite: favoriteStatus,
+  });
+
+  let url = `${urlBase}/ToggleFavorite.${extension}`;
+  let xhr = new XMLHttpRequest();
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try {
+    xhr.onreadystatechange = function () {
+      if (this.readyState == 4 && this.status == 200) {
+        if (favoriteStatus == false) {
+          // now its true
+          $(`#favContact-${id}`).attr("onclick", `toggleFavorite(${id}, ${!favoriteStatus})`)
+          $(`#favContact-${id}`).children().removeClass('bi-star');
+          $(`#favContact-${id}`).children().addClass('bi-star-fill');
+        }
+        else {
+          // now its false
+          $(`#favContact-${id}`).attr("onclick", `toggleFavorite(${id}, ${!favoriteStatus})`)
+          $(`#favContact-${id}`).children().removeClass('bi-star-fill');
+          $(`#favContact-${id}`).children().addClass('bi-star');
+        }
+      }
+    }
+    xhr.send(json)
   }
   catch (err) {
     console.log(err);
