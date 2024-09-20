@@ -69,7 +69,7 @@
   <div class="modal fade" id="addContactModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content">
-        <form id="addContactForm" onsubmit="addContact();">
+        <form id="addContactForm" onsubmit="addContact();" class="needs-validation" novalidate>
         <div class="modal-header">
           <h1 class="modal-title fs-5" id="addContactModalLabel">Add Contact</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -80,11 +80,17 @@
             <!-- Form Inputs -->
             <div class="mb-3">
               <label for="fullNameInput" class="col-form-label">Full Name</label>
-              <input type="text" class="form-control" id="fullNameInput">
+              <input type="text" class="form-control" id="fullNameInput" required>
+              <div class="invalid-feedback">
+                Please enter a name.
+              </div>
             </div>
             <div class="mb-3">
               <label for="phoneInput" class="col-form-label">Phone Number</label>
               <input type="tel" class="form-control" id="phoneInput">
+              <div class="invalid-feedback">
+                Please enter a valid telephone number.
+              </div>
             </div>
             <div class="mb-3">
               <label for="emailInput" class="col-form-label">E-mail</label>
@@ -96,9 +102,20 @@
             </div>
             <div class="mb-3">
               <label for="birthdayInput" class="col-form-label">Birthday</label>
-              <input type="date" class="form-control" id="birthdayInput">
+              <input type="date" data-format="yyyy-MM-dd" class="form-control" id="birthdayInput">
             </div>
-
+            <div class="mb-3">
+              <label for="noteInput" class="col-form-label">Notes</label>
+              <input type="text" class="form-control" id="noteInput">
+            </div>
+            <div class="mb-3">
+              <label for="pictureInput" class="col-form-label">Profile Picture</label>
+              <input type="url" class="form-control" id="pictureInput">
+            </div>
+            <div class="mb-3 form-check form-switch">
+              <label for="favoriteInput" class="form-check-label">Favorite</label>
+              <input type="checkbox" role="switch" class="form-check-input" id="favoriteInput">
+            </div>
 
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>

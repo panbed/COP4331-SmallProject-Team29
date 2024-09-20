@@ -128,7 +128,7 @@ function addUser() {
   let password = $("#regPassword").val();
 
   if (!firstName || !lastName || !login || !password) {
-    console.log("missing information! not creating contact...")
+    console.log("missing information! not creating user...")
   }
   else {
     let json = JSON.stringify({
@@ -188,14 +188,31 @@ function addUser() {
   }
 }
 
+function setNullIfBlank(str) {
+  if (str && str.trim()) {
+    return str
+  }
+  return null;
+}
+
+async function refreshContacts() {
+  $("#allContactsView").empty();
+  setTimeout(function() {
+    showContacts();
+  }, 500)
+}
+
 function addContact() {
   console.log("Trying to add contact...");
   // Get necessary information for a contact from inputs
   let name = $("#fullNameInput").val();
-  let phone = $("#phoneInput").val();
-  let email = $("#emailInput").val();
-  let address = $("#addressInput").val();
-  let birthday = $("#birthdayInput").val();
+  let phone = setNullIfBlank($("#phoneInput").val());
+  let email = setNullIfBlank($("#emailInput").val());
+  let address = setNullIfBlank($("#addressInput").val());
+  let birthday = setNullIfBlank($("#birthdayInput").val());
+  let favorite = $("#favoriteInput").is(":checked");
+  let picture = setNullIfBlank($("#pictureInput").val());
+  let notes = setNullIfBlank($("#noteInput").val());
 
   // Create JSON object to send to database
   let json = JSON.stringify({
@@ -204,7 +221,10 @@ function addContact() {
     email: email,
     address: address,
     birthday: birthday,
-    userId: userId
+    userId: userId,
+    favorite: favorite,
+    picture: picture,
+    notes: notes,
   });
 
   let url = `${urlBase}/AddContact.${extension}`;
@@ -213,6 +233,9 @@ function addContact() {
   xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
   try {
+    if (!name) {
+      throw new Error("No name defined!");
+    }
     xhr.onreadystatechange = function () {
 
       if (this.readyState == 4 && this.status == 200) {
@@ -235,7 +258,7 @@ function addContact() {
     $("#toasts").html(`
     <div class="toast show">
       <div class="toast-header">
-        <strong class="me-auto">Incorrect username or password!</strong>
+        <strong class="me-auto">An error has occurred!</strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
       <div class="toast-body">
@@ -244,6 +267,8 @@ function addContact() {
     </div>
   `)
   }
+
+  refreshContacts();
 }
 
 function deleteContact(id) {
@@ -254,7 +279,7 @@ function showDeleteModal(id) {
 
 }
 
-function createContactDiv(id, name, phone, email) {
+function createContactDiv(id, name, phone, email, picture, address, birthday, notes, favorite) {
   // creates a nicely styled div that looks nice in a list
   let htmlString = `
   <div id="contact-${id}" class="card mb-3">
@@ -269,28 +294,78 @@ function createContactDiv(id, name, phone, email) {
         <button type="button" id="deleteContact" class="btn"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
+  `
+
+  htmlString += `
     <div class="card-body d-flex">
+  `
+
+  if (picture != null) {
+    htmlString += `
+      <div class="my-auto pe-4 d-flex">
+        <img src="${picture}" class="profilePicture rounded-circle" alt="">
+      </div>
+    `
+  }
+  else {
+    htmlString += `
       <div class="my-auto pe-4 d-flex">
         <img src="/images/default.png" class="profilePicture rounded-circle" alt="">
       </div>
-      <div class="contactInfo my-auto">
-        <div class="d-flex align-items-center mb-1">
-          <i class="bi bi-telephone-fill me-1"></i>
-          <p class="mb-0">${phone}</p>
-        </div>
-        <div class="d-flex align-items-center mb-1">
-          <i class="bi bi-envelope-fill me-1"></i>
-          <p class="mb-0">${email}</p>
-        </div>
-        <div class="d-flex align-items-center mb-1">
-          <i class="bi bi-house-door-fill me-1"></i>
-          <p class="mb-0">${"123 Example St"}</p>
-        </div>
-        <div class="d-flex align-items-center">
-          <i class="bi bi-cake-fill me-1"></i>
-          <p class="mb-0">${"Jan 1st, 2000"}</p>
-        </div>
+    `
+  }
+
+  htmlString += `
+    <div class="contactInfo my-auto">
+  `
+
+  if (phone != null) {
+    htmlString += `
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-telephone-fill me-1"></i>
+        <p class="mb-0">${phone}</p>
       </div>
+    `
+  }
+
+  if (email != null) {
+    htmlString += `
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-envelope-fill me-1"></i>
+        <p class="mb-0">${email}</p>
+      </div>
+    `
+  }
+
+  if (address != null) {
+    htmlString += `
+      <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-house-door-fill me-1"></i>
+        <p class="mb-0">${address}</p>
+      </div>
+    `
+  }
+
+  if (birthday != null) {
+    htmlString += `
+      <div class="d-flex align-items-center">
+        <i class="bi bi-cake-fill me-1"></i>
+        <p class="mb-0">${birthday}</p>
+      </div>
+    `
+  }
+
+  if (notes != null) {
+    htmlString += `
+      <div class="d-flex align-items-center">
+        <i class="bi bi-sticky-fill me-1"></i>
+        <p class="mb-0">${notes}</p>
+      </div>
+    `
+  }
+
+  htmlString += `
+        </div>
     </div>
   </div>
   `
@@ -418,8 +493,13 @@ function sendContactsToPage(contacts) {
       let name = contact["name"];
       let phone = contact["phone"];
       let email = contact["email"];
+      let picture = contact["picture"];
+      let address = contact["address"];
+      let birthday = contact["birthday"];
+      let notes = contact["notes"];
+      let favorite = contact["favorite"];
 
-      $("#allContactsView").append(createContactDiv(id, name, phone, email));
+      $("#allContactsView").append(createContactDiv(id, name, phone, email, picture, address, birthday, notes, favorite));
     });
   }
 

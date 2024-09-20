@@ -26,12 +26,12 @@ if ($conn->connect_error) {
 		$jsonResult["id"] = $row["ID"];
 		$jsonResult["name"] = $row["Name"];
 		$jsonResult["phone"] = $row["Phone"];
-    $jsonResult["email"] = $row["Email"];
-    $jsonResult["birthday"] = $row["Birthday"];
-    $jsonResult["address"] = $row["Address"];
-    $jsonResult["picture"] = $row["Picture"];
-    $jsonResult["notes"] = $row["Notes"];
-    $jsonResult["favorite"] = $row["Favorite"];
+		$jsonResult["email"] = $row["Email"];
+		$jsonResult["birthday"] = $row["Birthday"];
+		$jsonResult["address"] = $row["Address"];
+		$jsonResult["picture"] = $row["Picture"];
+		$jsonResult["notes"] = $row["Notes"];
+		$jsonResult["favorite"] = $row["Favorite"];
 
 
 		// if($searchCount > 0) {
