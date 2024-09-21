@@ -271,10 +271,38 @@ function addContact() {
 }
 
 function deleteContact(id) {
-  // todo...
+	console.log("deleteContact-" + id + " called");
+	let json = JSON.stringify
+	(
+		{
+			contactID:id
+		}
+	);
+	console.log(json);
+	let url = `${urlBase}/DeleteContact.${extension}`;
+	let xhr = new XMLHttpRequest();
+	xhr.open("POST", url, true);
+	xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+	xhr.send(json);
+	
+	refreshContacts();
 }
 
-function showDeleteModal(id) {
+function showDeleteModal(id, name){	
+	let modalContent = $(document).find("#deleteContactModalContent")[0];
+	modalContent.innerHTML = 
+	`
+		<div class="modal-header">
+			<h1 class="modal-title fs-5">Delete Contact Confirmation</h1>
+		</div>
+    <div>
+      <p class="modal-body fs-5" id="deleteContactModalLabel">Are you sure you want to remove <strong>${name}</strong>? This action cannot be undone.</p>
+    </div>
+		<div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+			  <input type="submit" class="btn btn-danger" data-bs-dismiss="modal" onclick="deleteContact(${id});" value="Delete Contact">
+          </div>
+	`;
 
 }
 
@@ -303,7 +331,7 @@ function createContactDiv(id, name, phone, email, picture, address, birthday, no
 
   htmlString += `
         <button type="button" id="editContact-${id}" class="btn"><i class="bi bi-pencil-square"></i></button>
-        <button type="button" id="deleteContact-${id}" class="btn"><i class="bi bi-trash3-fill"></i></button>
+        <button type="button" onclick='showDeleteModal(${id}, "${name}")'  id="deleteContact-${id}" class="btn" data-bs-toggle="modal" data-bs-target="#deleteContactModal"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
   `
