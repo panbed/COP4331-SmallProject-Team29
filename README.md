@@ -26,7 +26,7 @@ LETS GO TEAM 29 LETS GO
 - [X] SearchContacts
 - [X] ShowContacts
 - [X] Pagination
-- [ ] Password Hashing
+- [X] Password Hashing
 - [ ] DeleteUser
 - [ ] Forgot Password
 
