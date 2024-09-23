@@ -2,6 +2,8 @@
 const urlBase = `http://${document.location.host}/LAMPAPI`;
 const extension = 'php';
 
+// import {md5} from "./md5.js";
+
 let userId = 0;
 let firstName = "";
 let lastName = "";
@@ -13,7 +15,7 @@ function doLogin() {
 
   let login = document.getElementById("loginName").value;
   let password = document.getElementById("loginPassword").value;
-  //	var hash = md5( password );
+  password = md5(password);
 
   document.getElementById("loginResult").innerHTML = "";
 
@@ -125,6 +127,7 @@ function addUser() {
   let lastName = $("#regLastName").val();
   let login = $("#regUserName").val();
   let password = $("#regPassword").val();
+  password = md5(password);
 
   if (!firstName || !lastName || !login || !password) {
     console.log("missing information! not creating user...")
