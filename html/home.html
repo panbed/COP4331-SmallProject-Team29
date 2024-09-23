@@ -28,7 +28,7 @@
 </head>
 
 <body onload="showContacts();">
-  <nav class="shadow-sm navbar sticky-top mb-3 p-2 bg-body-secondary">
+  <nav class="shadow-sm navbar sticky-top mb-3 p-2 bg-body-secondary" aria-label="Main navigation bar">
     <div class="container">
 
       <div class="d-flex flex-grow-1 align-items-center">
@@ -37,10 +37,10 @@
         </div>
 
         <div class="d-flex align-items-center" role="">
-          <button type="button" id="themeButton" class="btn" onclick="toggleThemeLocalStorage();">
+          <button type="button" id="themeButton" class="btn" aria-label="Toggle theme" onclick="toggleThemeLocalStorage();">
             <i id="themeIcon" class="bi bi-sun-fill"></i>
           </button>
-          <button type="button" id="logoutButton" class="btn" onclick="doLogout();">
+          <button type="button" id="logoutButton" class="btn" aria-label="Logout" onclick="doLogout();">
             <i class="bi bi-box-arrow-right"></i>
           </button>
         </div>
@@ -54,10 +54,10 @@
         </div>
 
         <div class="btn-group" role="group" aria-label="Tools">
-          <button type="button" id="addContactButton" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addContactModal" onclick="console.log(`in progress...`);">
+          <button type="button" id="addContactButton" class="btn btn-primary" aria-label="Add a new contact" data-bs-toggle="modal" data-bs-target="#addContactModal" onclick="console.log(`in progress...`);">
             <i class="bi bi-person-fill-add"></i>
           </button>
-          <button type="button" id="settingsButton" class="btn btn-primary" onclick="console.log(`in progress...`);">
+          <button type="button" id="settingsButton" class="btn btn-primary" aria-label="Settings" onclick="console.log(`in progress...`);">
             <i class="bi bi-sliders"></i>
           </button>
         </div>
@@ -135,8 +135,8 @@
     </div>	
   </div>
 
-  <div id="allContactsView" class="container">
-  </div>
+  <main id="allContactsView" class="container">
+  </main>
 
   <div id="contactsNav">
   </div>

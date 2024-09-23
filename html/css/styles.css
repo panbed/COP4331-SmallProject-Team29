@@ -14,10 +14,10 @@
 
 .name {
     max-width: 40vw;
-    overflow-y: hidden;
+    /* overflow-y: hidden;
     overflow-x: scroll;
     text-overflow: ellipsis;
-    white-space: nowrap;
+    white-space: nowrap; */
 }
 
 .card-body .profilePicture {

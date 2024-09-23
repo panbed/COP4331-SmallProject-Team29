@@ -107,7 +107,7 @@ function readCookie() {
   }
   else {
     $("#userNameContainer").html(`
-      <div id="userName" class="navbar-brand" href="#">Hello, <strong>${firstName} ${lastName}</strong>!</div>
+      <h1 id="userName" class="navbar-brand" href="#">Hello, <strong>${firstName} ${lastName}</strong>!</h1>
     `);
   }
 }
@@ -320,18 +320,18 @@ function createContactDiv(id, name, phone, email, picture, address, birthday, no
 
   if (favorite == false) {
     htmlString += `
-      <button type="button" onclick="toggleFavorite(${id}, ${favorite})" id="favContact-${id}" class="btn p-2"><i class="bi bi-star"></i></button>
+      <button type="button" aria-label="Favorite ${name}. Currently set to ${favorite}" onclick="toggleFavorite(${id}, ${favorite})" id="favContact-${id}" class="btn p-2"><i class="bi bi-star"></i></button>
     `
   }
   else {
     htmlString += `
-      <button type="button" onclick="toggleFavorite(${id}, ${favorite})" id="favContact-${id}" class="btn p-2"><i class="bi bi-star-fill"></i></button>
+      <button type="button" aria-label="Favorite ${name}. Currently set to ${favorite}" onclick="toggleFavorite(${id}, ${favorite})" id="favContact-${id}" class="btn p-2"><i class="bi bi-star-fill"></i></button>
     `
   }
 
   htmlString += `
-        <button type="button" id="editContact-${id}" class="btn"><i class="bi bi-pencil-square"></i></button>
-        <button type="button" onclick='showDeleteModal(${id}, "${name}")'  id="deleteContact-${id}" class="btn" data-bs-toggle="modal" data-bs-target="#deleteContactModal"><i class="bi bi-trash3-fill"></i></button>
+        <button type="button" aria-label="Edit information for ${name}" id="editContact-${id}" class="btn"><i class="bi bi-pencil-square"></i></button>
+        <button type="button" aria-label="Delete ${name}" onclick='showDeleteModal(${id}, "${name}")'  id="deleteContact-${id}" class="btn" data-bs-toggle="modal" data-bs-target="#deleteContactModal"><i class="bi bi-trash3-fill"></i></button>
       </div>
     </div>
   `
@@ -448,7 +448,7 @@ function showContacts(page = 1) {
         }
 
         let htmlString = `
-          <nav>
+          <nav aria-label="Pagination">
             <ul class="pagination justify-content-center">
               <li class="${li1_class}">
                 <a class="page-link" href="#" onclick="showContacts(${page-1})" tabindex="-1">Previous</a>
