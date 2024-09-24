@@ -310,7 +310,7 @@ function showDeleteModal(id, name){
 function createContactDiv(id, name, phone, email, picture, address, birthday, notes, favorite) {
   // creates a nicely styled div that looks nice in a list
   let htmlString = `
-  <div id="contact-${id}" class="card mb-3" data-contact-id="${id}">
+  <div id="contact-${id}" class="card mb-3 shadow-sm" data-contact-id="${id}">
     <div class="card-header d-flex">
       <div class="nameContainer flex-fill my-auto">
         <h6 class="mb-0 name"><strong>${name}</strong></h6>
