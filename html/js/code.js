@@ -2,8 +2,6 @@
 const urlBase = `http://${document.location.host}/LAMPAPI`;
 const extension = 'php';
 
-// import {md5} from "./md5.js";
-
 let userId = 0;
 let firstName = "";
 let lastName = "";
@@ -37,14 +35,14 @@ function doLogin() {
         if (userId < 1) {
           // Print error message below the login window
           $("#toasts").html(`
-            <div class="p-2 m-2 d-flex alert alert-warning alert-dismissable" role="alert">
+            <div class="p-2 m-2 d-flex alert alert-warning fade alert-dismissable" role="alert">
               <div>Incorrect username or password!</div>
               <button type="button" class="btn-close ms-1" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
           `);
 
           $("#toasts").html(`
-          <div class="toast show">
+          <div class="toast show fade">
             <div class="toast-header">
               <strong class="me-auto">Incorrect username or password!</strong>
               <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -236,8 +234,9 @@ function addContact() {
 
   try {
     if (!name) {
-      throw new Error("No name defined!");
+      throw new Error("Did not add contact!");
     }
+
     xhr.onreadystatechange = function () {
 
       if (this.readyState == 4 && this.status == 200) {
@@ -255,10 +254,11 @@ function addContact() {
       }
     };
     xhr.send(json);
+    refreshContacts();
   }
   catch (err) {
     $("#toasts").html(`
-    <div class="toast show">
+    <div class="toast show" role="alert" data-bs-delay="1000">
       <div class="toast-header">
         <strong class="me-auto">An error has occurred!</strong>
         <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
@@ -269,8 +269,6 @@ function addContact() {
     </div>
   `)
   }
-
-  refreshContacts();
 }
 
 function deleteContact(id) {
@@ -452,9 +450,9 @@ function showContacts(page = 1) {
 
         let htmlString = `
           <nav aria-label="Pagination">
-            <ul class="pagination justify-content-center">
+            <ul class="pagination justify-content-center flex-wrap m-5">
               <li class="${li1_class}">
-                <a class="page-link" href="#" onclick="showContacts(${page-1})" tabindex="-1">Previous</a>
+                <a class="page-link" href="#" onclick="showContacts(${page-1})" tabindex="-1" aria-label="Previous">&laquo;</a>
               </li>
         `
 
@@ -482,7 +480,7 @@ function showContacts(page = 1) {
 
         htmlString += `
               <li class="${lie_class}">
-                <a class="page-link" href="#" onclick="showContacts(${page+1})" tabindex="-1">Next</a>
+                <a class="page-link" href="#" onclick="showContacts(${page+1})" tabindex="-1" aria-label="Next">&raquo;</a>
               </li>
             </ul>
           </nav>
@@ -630,6 +628,15 @@ function setThemeIcon() {
   }
 }
 
+function clearAddContactForm() {
+  $("#addContactForm")[0].reset();
+  $("#addContactForm").removeClass("was-validated");
+}
+
+// function validateForm(name, phone, email, address, birthday, favorite, picture, notes) {
+//   if ()
+// }
+
 // extra functions to load after the window loads
 $(function () {
   console.log("Document ready.")
@@ -659,6 +666,10 @@ $(function () {
     console.log("contact modal shown!");
   });
 
+  $("#addContactModal").on("hidden.bs.modal", function() {
+    clearAddContactForm();
+  });
+
   // bro..
   const addContactForm = $(document).find("#addContactForm")[0];
   if (addContactForm) {
@@ -669,15 +680,17 @@ $(function () {
 
   const forms = $(document).find('.needs-validation')
 
-  // Loop over them and prevent submission
+  // Loop over all forms and prevent submission if validation fails
   Array.from(forms).forEach(form => {
     form.addEventListener('submit', event => {
       event.preventDefault();
       if (!form.checkValidity()) {
         event.stopPropagation();
+        console.log("invalid form");
       }
 
-      form.classList.add('was-validated')
+      form.classList.add('was-validated');
+
     }, false)
   })
 
