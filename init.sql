@@ -14,7 +14,7 @@ CREATE TABLE `COP4331`.`Users` (
 ) ENGINE = InnoDB;
 
 -- Create example user
-INSERT INTO Users (FirstName,LastName,Login,Password) VALUES ('Rick','Leinecker','RickL', MD5('COP4331'));
+INSERT INTO Users (FirstName,LastName,Login,Password) VALUES ('Rick','Leinecker','RickL', MD5(MD5('COP4331')));
 
 -- Create "Contacts" table
 CREATE TABLE `COP4331`.`Contacts` (
