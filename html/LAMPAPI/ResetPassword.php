@@ -1,9 +1,4 @@
 <?php
-// team29beast@gmail.com
-// #@dPL?89q'8RU.H
-
-// google app password tjky cpdl hztd xfer
-
 include "Config.php";
 
 use PHPMailer\PHPMailer\PHPMailer;
@@ -39,8 +34,8 @@ else {
     $stmt->close();
 
     $mail = new PHPMailer(true);
-
-    //Configure SMTP
+    
+    // Change parameters for email
     $mail->isSMTP();
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
@@ -49,13 +44,11 @@ else {
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 
-    // $mail->addCC('email');
-    // $mail->BCC('user@gmail.com');
     $mail->setFrom('team29beast@gmail.com', 'The Beast');
     $mail->addAddress($email, $fname . ' ' . $lname);
 
-    $mail->isHTML(true); // Set email format to HTML
- 
+    $mail->isHTML(true);
+
     $mail->Subject = 'Contact Manager - Password Reset';
     $mail->Body    = "<h1>Contact Manager - Team29</h1>
                   <p>Your password has been reset to the following temporary password:</p>
@@ -74,7 +67,7 @@ else {
 
   } 
   else {
-    returnWithError("Account not Found");
+    returnWithError("Account associated with that email not Found");
   }
 }
 $conn->close();
