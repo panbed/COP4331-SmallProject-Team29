@@ -6,6 +6,8 @@ let userId = 0;
 let firstName = "";
 let lastName = "";
 
+let globalPage = 1;
+
 function doLogin() {
   userId = 0;
   firstName = "";
@@ -196,337 +198,355 @@ function setNullIfBlank(str) {
 }
 
 async function refreshContacts() {
+  // $("#allContactsView").fadeOut(500, function() {
+  //   $(this).empty();
+  //   showContacts(globalPage);
+  //   $(this).fadeIn();
+  // });
+
+  // await $("#contactsNav").fadeOut().promise();
+  $("#contactsNav").hide();
+  await $("#allContactsView").fadeOut().promise();
   $("#allContactsView").empty();
-  setTimeout(function() {
-    showContacts();
-  }, 500)
+  showContacts(globalPage);
+  await $("#allContactsView").fadeIn().promise();
+  $("#contactsNav").show();
 }
 
 function addContact() {
   console.log("Trying to add contact...");
-  // Get necessary information for a contact from inputs
-  let name = $("#fullNameInput").val();
-  let phone = setNullIfBlank($("#phoneInput").val());
-  let email = setNullIfBlank($("#emailInput").val());
-  let address = setNullIfBlank($("#addressInput").val());
-  let birthday = setNullIfBlank($("#birthdayInput").val());
-  let favorite = $("#favoriteInput").is(":checked");
-  let picture = setNullIfBlank($("#pictureInput").val());
-  let notes = setNullIfBlank($("#noteInput").val());
 
-  // Create JSON object to send to database
-  let json = JSON.stringify({
-    name: name,
-    phone: phone,
-    email: email,
-    address: address,
-    birthday: birthday,
-    userId: userId,
-    favorite: favorite,
-    picture: picture,
-    notes: notes,
-  });
+  let form = document.getElementById("addContactForm");
+  console.log(form.checkValidity());
 
-  let url = `${urlBase}/AddContact.${extension}`;
-  let xhr = new XMLHttpRequest();
-  xhr.open("POST", url, true);
-  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
-  try {
-    if (!name) {
-      throw new Error("Did not add contact!");
+  if (form.checkValidity()) {
+    // Get necessary information for a contact from inputs
+    let name = $("#fullNameInput").val();
+    let phone = setNullIfBlank($("#phoneInput").val());
+    let email = setNullIfBlank($("#emailInput").val());
+    let address = setNullIfBlank($("#addressInput").val());
+    let birthday = setNullIfBlank($("#birthdayInput").val());
+    let favorite = $("#favoriteInput").is(":checked");
+    let picture = setNullIfBlank($("#pictureInput").val());
+    let notes = setNullIfBlank($("#noteInput").val());
+
+    // Create JSON object to send to database
+    let json = JSON.stringify({
+      name: name,
+      phone: phone,
+      email: email,
+      address: address,
+      birthday: birthday,
+      userId: userId,
+      favorite: favorite,
+      picture: picture,
+      notes: notes,
+    });
+
+    let url = `${urlBase}/AddContact.${extension}`;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+      xhr.onreadystatechange = function () {
+
+        if (this.readyState == 4 && this.status == 200) {
+          $("#toasts").html(`
+          <div class="toast show">
+            <div class="toast-header">
+              <strong class="me-auto">Success!</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              ${name} was added to your contacts!
+            </div>
+          </div>
+        `)
+        }
+      };
+      xhr.send(json);
+      refreshContacts();
     }
-
-    xhr.onreadystatechange = function () {
-
-      if (this.readyState == 4 && this.status == 200) {
-        $("#toasts").html(`
-        <div class="toast show">
-          <div class="toast-header">
-            <strong class="me-auto">Success!</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-          </div>
-          <div class="toast-body">
-            ${name} was added to your contacts!
-          </div>
+    catch (err) {
+      $("#toasts").html(`
+      <div class="toast show" role="alert" data-bs-delay="1000">
+        <div class="toast-header">
+          <strong class="me-auto">An error has occurred!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
         </div>
-      `)
-      }
-    };
-    xhr.send(json);
-    refreshContacts();
-  }
-  catch (err) {
-    $("#toasts").html(`
-    <div class="toast show" role="alert" data-bs-delay="1000">
-      <div class="toast-header">
-        <strong class="me-auto">An error has occurred!</strong>
-        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        <div class="toast-body">
+          ${err.message}
+        </div>
       </div>
-      <div class="toast-body">
-        ${err.message}
-      </div>
-    </div>
-  `)
+    `)
+    }
   }
+  
 }
 
 
-function editContact(id)
-{
-	let contact = $(`#contact-${id}`)[0];
-	
-	
-	// ensures that editContact function cannot be called multiple times on same contact
-	if($(`#contact-${id}`).find(`[id^='editContactForm-${id}']`)[0] !== undefined)
-	{
-		return ;
-	}
-	
-	let contactClone = contact.cloneNode(true);  // for cancel function
-	
-	// function to create input objects
-	var createInput = function(field, placeholderIn)
-	{
-		var input = $("<input>", {
-			id: `editContactInput-${field}`,
-			type: 'text',
-			placeholder: placeholderIn
-		});
-		
-		return input
-	}
-	
-	//  function to create input objects as HTML string
-	var createInputHTMLString = function(field, placeholderIn)
-	{
-		var input = `<input id="editContactInput-${field}" type="text" placeholder=${placeholderIn} />`
-		return input
-	}
-	
-	var submitForm = function(event)
-	{
-		event.preventDefault();
-		let emailVal = setNullIfBlank($("#editContactInput-email").val());
-		let phoneVal = setNullIfBlank($("#editContactInput-phone").val());
-		let addressVal = setNullIfBlank($("#editContactInput-address").val());
-		let birthdayVal = setNullIfBlank($("#editContactInput-birthday").val());
-		let notesVal = setNullIfBlank($("#editContactInput-notes").val());
-		let nameVal = setNullIfBlank($("#editContactInput-name").val());
-		let pfpVal = setNullIfBlank($("#editContactInput-pfp").val());
-		let favoriteVal;
+function editContact(id) {
+  let contact = $(`#contact-${id}`)[0];
 
-		
-		if($(`#favContact-${id}`).children().first().attr("class") === "bi bi-star")
-		{
-			favoriteVal = false;
-		}
-		else
-		{
-			favoriteVal = true;
-		}
-		
-		let json = JSON.stringify({
-		name: nameVal,
-		phone: phoneVal,
-		email: emailVal,
-		address: addressVal,
-		birthday: birthdayVal,
-		userId: id,
-		favorite: favoriteVal,
-		picture: pfpVal,
-		notes: notesVal
-	  });
-	  
-	  console.log(json);
-	  
-	 let url = `${urlBase}/EditContact.${extension}`;
-	 let xhr = new XMLHttpRequest();
-	 xhr.open("POST", url, true);
-	 xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-	  try {
-		if (!name) {
-		  throw new Error("No name defined!");
-		}
-		xhr.onreadystatechange = function () {
+  // ensures that editContact function cannot be called multiple times on same contact
+  if ($(`#contact-${id}`).find(`[id^='editContactForm-${id}']`)[0] !== undefined) {
+    return;
+  }
 
-		  if (this.readyState == 4 && this.status == 200) {
-			$("#toasts").html(`
-			<div class="toast show">
-			  <div class="toast-header">
-				<strong class="me-auto">Success!</strong>
-				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-			  </div>
-			  <div class="toast-body">
-				${nameVal}'s contact was edited
-			  </div>
-			</div>
-		  `)
-		  }
-		};
-		xhr.send(json);
-	  }
-	  catch (err) {
-		$("#toasts").html(`
-		<div class="toast show">
-		  <div class="toast-header">
-			<strong class="me-auto">An error has occurred!</strong>
-			<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-		  </div>
-		  <div class="toast-body">
-			${err.message}
-		  </div>
-		</div>
+  let contactClone = contact.cloneNode(true);  // for cancel function
+
+  // function to create input objects
+  var createInput = function (field, placeholderIn, actuallyValue) {
+    let input;
+    if (actuallyValue) {
+      input = $("<input>", {
+        class: 'form-control form-control-sm',
+        id: `editContactInput-${field}`,
+        type: 'text',
+        value: placeholderIn
+      });
+    }
+    else {
+      input = $("<input>", {
+        class: 'form-control form-control-sm',
+        id: `editContactInput-${field}`,
+        type: 'text',
+        placeholder: placeholderIn
+      });
+    }
+
+    return input
+  }
+
+  //  function to create input objects as HTML string
+  var createInputHTMLString = function (field, placeholderIn, actuallyValue, type = "text") {
+    let input;
+    if (actuallyValue) {
+      input = `<input class="form-control form-control-sm" id="editContactInput-${field}" type="${type}" value="${placeholderIn}" />`
+    }
+    else {
+      input = `<input class="form-control form-control-sm" id="editContactInput-${field}" type="${type}" placeholder="${placeholderIn}" />`
+    }
+    return input
+  }
+
+  var submitForm = function (event) {
+    event.preventDefault();
+    let emailVal = setNullIfBlank($("#editContactInput-email").val());
+    let phoneVal = setNullIfBlank($("#editContactInput-phone").val());
+    let addressVal = setNullIfBlank($("#editContactInput-address").val());
+    let birthdayVal = setNullIfBlank($("#editContactInput-birthday").val());
+    let notesVal = setNullIfBlank($("#editContactInput-notes").val());
+    let nameVal = setNullIfBlank($("#editContactInput-name").val());
+    let pfpVal = setNullIfBlank($("#editContactInput-pfp").val());
+    let favoriteVal;
+
+
+    if ($(`#favContact-${id}`).children().first().attr("class") === "bi bi-star") {
+      favoriteVal = false;
+    }
+    else {
+      favoriteVal = true;
+    }
+
+    let json = JSON.stringify({
+      name: nameVal,
+      phone: phoneVal,
+      email: emailVal,
+      address: addressVal,
+      birthday: birthdayVal,
+      id: id,
+      favorite: favoriteVal,
+      picture: pfpVal,
+      notes: notesVal
+    });
+
+    console.log(json);
+
+    let url = `${urlBase}/EditContact.${extension}`;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    try {
+      if (!name) {
+        throw new Error("No name defined!");
+      }
+      xhr.onreadystatechange = function () {
+
+        if (this.readyState == 4 && this.status == 200) {
+          console.log("Successfully edited contact!");
+        }
+      };
+      xhr.send(json);
+    }
+    catch (err) {
+      $("#toasts").html(`
+        <div class="toast show">
+          <div class="toast-header">
+          <strong class="me-auto">An error has occurred!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+          </div>
+          <div class="toast-body">
+          ${err.message}
+          </div>
+        </div>
 	  `)
-	  }
-	 
-	 refreshContacts();
-	  
-	}
-	
-	 // Create a form element
-	 let form = $("<form>", {
-		id: `editContactForm-${id}`,
-		//action: `submitForm(event)`
-	 });
-	 contact.append(form[0]);
-	
-	// append header and body of contact container into form tag
-	let cardHeader = $(`#contact-${id}`).find(`[class*="card-header d-flex"]`);
-	let cardBody = $(`#contact-${id}`).find(`[class*="card-body d-flex"]`);
-	cardHeader.detach().appendTo(`#editContactForm-${id}`);
-	cardBody.detach().appendTo(`#editContactForm-${id}`);
-	
-	//handle name input
-	let name = $(`#contact-${id}`).find(`[class*="mb-0 name"]`);
-	name.hide();
-	name.after(createInput("name",name.text()));
-	
-	// handle pfp input
-	let pfpSrc = cardBody.find(`[class*="profilePicture rounded-circle"]`);
-	pfpSrc.hide();
-	pfpSrc.after(createInput("pfp", pfpSrc.attr("src").toString()));
+    }
 
-	//handle fields											
-	let infoContainer = $(`#contact-${id}`).find(`[class*="contactInfo my-auto"]`);
-	let phone =  $(`#contact-${id}`).find(`[class*="bi bi-telephone-fill me-1"]`).next();
-	let email =  $(`#contact-${id}`).find(`[class*="bi bi-envelope-fill me-1"]`).next();
-	let address =  $(`#contact-${id}`).find(`[class*="bi bi-house-door-fill me-1"]`).next();	
-	let birthday =  $(`#contact-${id}`).find(`[class*="bi bi-cake-fill me-1"]`).next();
-	let notes =  $(`#contact-${id}`).find(`[class*="bi bi-sticky-fill me-1"]`).next();
-	
+    refreshContacts();
 
+  }
 
-	let inputPhoneString;
-	if(phone.text() === "")
-	{
-		inputPhoneString = createInputHTMLString("phone", "***-***-****");
-	}else{inputPhoneString = createInputHTMLString("phone", phone.text());}
-	
-	let inputEmailString;
-	if(email.text() === "")
-	{
-	inputEmailString = createInputHTMLString("email", "[name]@[domain].com");
-	}else{inputEmailString = createInputHTMLString("email", email.text());}
-	
-	let inputAddressString;
-	if(address.text() === "")
-	{
-		inputAddressString = createInputHTMLString("Address", "[###][street][road]");
-	}else{inputAddressString = createInputHTMLString("Address", address.text());}
-	
-	let inputBirthdayString;
-	if(birthday.val() === "")
-	{
-		inputBirthdayString = `<input type="date" data-format="yyyy-MM-dd" class="form-control" id="editContactInput-birthday">`;
-	}else{inputBirthdayString = `<input type="date" data-format="yyyy-MM-dd" class="form-control" id="editContactInput-birthday">`}
-	
-	let inputNotesString;
-	if(notes.text() === "")
-	{
-		inputNotesString = createInputHTMLString("Notes", "write something here...");
-	}else{inputNotesString = createInputHTMLString("Notes", notes.text());}
-	
-	infoContainer.empty();
-	
-	let htmlString = 
-	
-   `
+  // Create a form element
+  let form = $("<form>", {
+    id: `editContactForm-${id}`,
+    //action: `submitForm(event)`
+  });
+  contact.append(form[0]);
+
+  // append header and body of contact container into form tag
+  let cardHeader = $(`#contact-${id}`).find(`[class*="card-header d-flex"]`);
+  let cardBody = $(`#contact-${id}`).find(`[class*="card-body d-flex"]`);
+  cardHeader.detach().appendTo(`#editContactForm-${id}`);
+  cardBody.detach().appendTo(`#editContactForm-${id}`);
+
+  //handle name input
+  let name = $(`#contact-${id}`).find(`[class*="mb-0 name"]`);
+  name.hide();
+  // name.after(createInput("name", name.text(), true));
+  name.after(`<input class="form-control" id="editContactInput-name" type="text" value="${name.text()}" maxlength="50" required>`)
+
+  // handle pfp input
+  let pfpSrc = cardBody.find(`[class*="profilePicture rounded-circle"]`);
+  pfpSrc.hide();
+  // pfpSrc.after(createInput("pfp", pfpSrc.attr("src").toString(), true));
+  // let inputPfpString = createInput("pfp", pfpSrc.attr("src").toString(), true);
+
+  //handle fields											
+  let infoContainer = $(`#contact-${id}`).find(`[class*="contactInfo my-auto"]`);
+  let phone = $(`#contact-${id}`).find(`[class*="bi bi-telephone-fill me-1"]`).next();
+  let email = $(`#contact-${id}`).find(`[class*="bi bi-envelope-fill me-1"]`).next();
+  let address = $(`#contact-${id}`).find(`[class*="bi bi-house-door-fill me-1"]`).next();
+  let birthday = $(`#contact-${id}`).find(`[class*="bi bi-cake-fill me-1"]`).next();
+  let notes = $(`#contact-${id}`).find(`[class*="bi bi-sticky-fill me-1"]`).next();
+
+  infoContainer.addClass("p-1");
+
+  let inputPhoneString;
+  if (phone.text() === "") {
+    inputPhoneString = createInputHTMLString("phone", "***-***-****", null, "tel");
+  } else { inputPhoneString = createInputHTMLString("phone", phone.text(), true, "tel"); }
+
+  let inputEmailString;
+  if (email.text() === "") {
+    inputEmailString = createInputHTMLString("email", "example@domain.com", null, "email");
+  } else { inputEmailString = createInputHTMLString("email", email.text(), true, "email"); }
+
+  let inputAddressString;
+  if (address.text() === "") {
+    inputAddressString = createInputHTMLString("address", "123 Example Street");
+  } else { inputAddressString = createInputHTMLString("address", address.text(), true); }
+
+  let inputBirthdayString;
+  if (birthday.text() === "") {
+    inputBirthdayString = `<input type="date" data-format="yyyy-MM-dd" class="form-control form-control-sm" id="editContactInput-birthday">`;
+  } else { inputBirthdayString = `<input type="date" data-format="yyyy-MM-dd" value="${birthday.text()}" class="form-control form-control-sm" id="editContactInput-birthday">` }
+
+  let inputNotesString;
+  if (notes.text() === "") {
+    inputNotesString = createInputHTMLString("notes", "Write some notes!");
+  } else { inputNotesString = createInputHTMLString("notes", notes.text(), true); }
+
+  infoContainer.empty();
+
+  let htmlString =
+    `
+    <div class="d-flex align-items-center mb-1">
+        <i class="bi bi-card-image me-2"></i>
+        <input class="form-control form-control-sm" id="editContactInput-pfp" type="url" value="${pfpSrc.attr("src").toString()}" />
+    </div>` +
+    `
 	 <div class="d-flex align-items-center mb-1">
-        <i class="bi bi-telephone-fill me-1"></i>` +
-		inputPhoneString +
-      `</div>
+        <i class="bi bi-telephone-fill me-2"></i>` +
+    inputPhoneString +
+    `</div>
     
       <div class="d-flex align-items-center mb-1">
-        <i class="bi bi-envelope-fill me-1"></i>` +
-        inputEmailString +
-      `</div>
+        <i class="bi bi-envelope-fill me-2"></i>` +
+    inputEmailString +
+    `</div>
     
       <div class="d-flex align-items-center mb-1">
-        <i class="bi bi-house-door-fill me-1"></i>` +
-         inputAddressString +
-      `</div>
+        <i class="bi bi-house-door-fill me-2"></i>` +
+    inputAddressString +
+    `</div>
     
       <div class="d-flex align-items-center">
-        <i class="bi bi-cake-fill me-1"></i> ` +
-       inputBirthdayString +
-      `</div>
+        <i class="bi bi-cake-fill me-2"></i> ` +
+    inputBirthdayString +
+    `</div>
     
       <div class="d-flex align-items-center">
-        <i class="bi bi-sticky-fill me-1"></i> ` + 
-        inputNotesString + 
-      `</div>
+        <i class="bi bi-sticky-fill me-2"></i> ` +
+    inputNotesString +
+    `</div>
 	`
-	
-	infoContainer.append(htmlString);
-	
-	// function so that clicking the cancel button restores the contact
-	var cancelEditContact = function(event)
-	{
-		event.preventDefault();
-		let parent = $(`#allContactsView`);
-		let sibling = contact.next;
-		let index = $(`#contact-${id}`).index();
-		contact.remove();
-		parent[0].insertBefore(contactClone, parent[0].childNodes[index]);
-	};
-	
-	// cancel button
-	let cancelButton = $("<button>", {
-		id: `editContact-cancelButton-${id}`,
-		class:"btn btn-secondary",
-		text:"Cancel"
-	 });
-	 
-	 // submit button
-	 let submitButton = $("<button>", {
-		 id: `editContact-submitButton-${id}`,
-		 type:"submit",
-		 form: `editContactForm-${id}`,
-		 class: "btn btn-primary",
-		 text: "Apply"
-	 });
-	 
-	cancelButton.on("click", function(){cancelEditContact(event);});
-	submitButton.on("click", function(){submitForm(event);});
-	 
-	 infoContainer.append(cancelButton);
-	 infoContainer.append(submitButton);
-	 //infoContainer.append(submitButton);
-	
+
+  infoContainer.append(htmlString);
+
+  // function so that clicking the cancel button restores the contact
+  var cancelEditContact = function (event) {
+    event.preventDefault();
+    let parent = $(`#allContactsView`);
+    parent[0].insertBefore(contactClone, contact);
+    contact.remove();
+    parent[0].insert
+  };
+
+  // cancel button
+  let cancelButton = $("<button>", {
+    id: `editContact-cancelButton-${id}`,
+    class: "btn",
+    html: `<i class="bi bi-x-circle"></i>`,
+    "aria-label": "Cancel Editing",
+  });
+
+  // submit button
+  let submitButton = $("<button>", {
+    id: `editContact-submitButton-${id}`,
+    type: "submit",
+    form: `editContactForm-${id}`,
+    class: "btn",
+    html: `<i class="bi bi-check-circle-fill"></i>`,
+    "aria-label": "Submit Edits",
+  });
+
+  cancelButton.on("click", function () { cancelEditContact(event); });
+  submitButton.on("click", function () { submitForm(event); });
+
+  // Append cancel and apply buttons to header (inside the contact options div)
+  let contactOptions = $(`#contact-${id}`).find(`[class*="contactOptions"]`);
+  contactOptions.hide();
+  
+  cardHeader.append(cancelButton);
+  cardHeader.append(submitButton);
+  //infoContainer.append(submitButton);
+
 }
 	
 
 
 function deleteContact(id) {
-	console.log("deleteContact-" + id + " called");
+	// console.log("deleteContact-" + id + " called");
 	let json = JSON.stringify
 	(
 		{
 			contactID:id
 		}
 	);
-	console.log(json);
+	// console.log(json);
 	let url = `${urlBase}/DeleteContact.${extension}`;
 	let xhr = new XMLHttpRequest();
 	xhr.open("POST", url, true);
@@ -563,7 +583,7 @@ function createContactDiv(id, name, phone, email, picture, address, birthday, no
         <h6 class="mb-0 name"><strong>${name}</strong></h6>
       </div>
 
-      <div class="">
+      <div class="contactOptions">
   `
 
   if (favorite == false) {
@@ -662,6 +682,7 @@ function createContactDiv(id, name, phone, email, picture, address, birthday, no
 }
 
 function showContacts(page = 1) {
+  globalPage = page;
   let postJSON = JSON.stringify({
     userId: userId
   });
@@ -761,7 +782,7 @@ function searchContacts() {
     xhr.onreadystatechange = function () {
       if (this.readyState == 4 && this.status == 200) {
         let json = JSON.parse(xhr.responseText);
-        console.log(json);
+        // console.log(json);
         results = json["results"];
         sendContactsToPage(results)
       }
@@ -886,7 +907,7 @@ function clearAddContactForm() {
 
 // extra functions to load after the window loads
 $(function () {
-  console.log("Document ready.")
+  console.log("Contact Manager!!!")
 
   // read localstorage and set options
   setTheme();
