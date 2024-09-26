@@ -10,11 +10,12 @@ CREATE TABLE `COP4331`.`Users` (
 	`LastName` VARCHAR(50) NOT NULL DEFAULT '' ,
 	`Login` VARCHAR(50) NOT NULL DEFAULT '' ,
 	`Password` VARCHAR(255) NOT NULL DEFAULT '' ,
+  `Email` VARCHAR(50) NOT NULL DEFAULT '' ,
 	PRIMARY KEY (`ID`)
 ) ENGINE = InnoDB;
 
 -- Create example user
-INSERT INTO Users (FirstName,LastName,Login,Password) VALUES ('Rick','Leinecker','RickL', MD5(MD5('COP4331')));
+INSERT INTO Users (FirstName,LastName,Email,Login,Password) VALUES ('Rick','Leinecker','metuccr@gmail.com', 'RickL', MD5(MD5('COP4331')));
 
 -- Create "Contacts" table
 CREATE TABLE `COP4331`.`Contacts` (
