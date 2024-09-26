@@ -21,7 +21,7 @@ if($conn->connect_error) {
   returnWithError($conn->connect_error);
 }
 else {
-  $stmt = $conn->prepare("SELECT FirstName,LastName,ID FROM Users WHERE Email=?");
+  $stmt = $conn->prepare("SELECT FirstName,LastName FROM Users WHERE Email=?");
   $stmt->bind_param("s", $email);
   $stmt->execute();
   $result = $stmt->get_result();
@@ -30,8 +30,13 @@ else {
   if($row = $result->fetch_assoc()) {
     $fname = $row['FirstName'];
     $lname = $row['LastName'];
+
     $newpass = random_str(8);
+    $hashpass = md5(md5($newpass));
     $stmt = $conn->prepare("UPDATE Users SET Password=? WHERE Email=?");
+    $stmt->bind_param("ss", $hashpass, $email);
+    $stmt->execute();
+    $stmt->close();
 
     $mail = new PHPMailer(true);
 
