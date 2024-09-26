@@ -45,7 +45,7 @@ else {
     $mail->Host = 'smtp.gmail.com';
     $mail->SMTPAuth = true;
     $mail->Username = 'team29beast@gmail.com';
-    $mail->Password = 'tjkycpdlhztdxfer';
+    $mail->Password = MAIL_PASS;
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port = 587;
 
