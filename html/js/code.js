@@ -931,6 +931,15 @@ $(function () {
     }
   });
 
+  // handle add contact modal
+  $("#addContactModal").on("show.bs.modal", e => {
+    console.log("contact modal shown!");
+  });
+
+  $("#addContactModal").on("hidden.bs.modal", function() {
+    clearAddContactForm();
+  });
+  
   // validate email 
   const validateEmail = (email) => {
     return email.match(
