@@ -1,4 +1,8 @@
 # exclude sql data
 mysql/*
 jsconfig.json
+
+# exclude vendor folder
+html/LAMPAPI/vendor
+
 .vscode
