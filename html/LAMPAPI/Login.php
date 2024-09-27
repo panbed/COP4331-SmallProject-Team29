@@ -6,7 +6,7 @@
 	
 	$id = 0;
 	$firstName = "";
-	$lastName = "";
+  $lastName = "";
 
 	$conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 	if( $conn->connect_error )
@@ -15,11 +15,11 @@
 	}
 	else
 	{
-    $stmt = $conn->prepare("SELECT ID,firstName,lastName FROM Users WHERE Login=? AND Password =?");
+    $stmt = $conn->prepare("SELECT ID,firstName,lastName FROM Users WHERE (Login=? OR Email=?) AND Password =?");
 
     $secure = md5($inData["password"]);
 
-		$stmt->bind_param("ss", $inData["login"], $secure);
+		$stmt->bind_param("sss", $inData["login"], $inData["login"], $secure);
 		$stmt->execute();
 		$result = $stmt->get_result();
 
