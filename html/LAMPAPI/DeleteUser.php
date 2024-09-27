@@ -12,7 +12,7 @@ if ($conn->connect_error) {
 } else {
     $stmt = $conn->prepare("DELETE FROM Contacts WHERE UserID=?");
     $stmt->bind_param("d", $userID);
-    if(!$stmt->execture()) {
+    if(!$stmt->execute()) {
         returnWithError("Error emptying contacts");
     }
 
