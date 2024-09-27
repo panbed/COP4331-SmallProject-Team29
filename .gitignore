@@ -2,4 +2,8 @@
 mysql/*
 jsconfig.json
 .vscode
+
+# ignore composer files
 html/LAMPAPI/vendor
+html/LAMPAPI/composer.json
+html/LAMPAPI/composer.lock
