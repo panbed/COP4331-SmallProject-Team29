@@ -6,3 +6,8 @@ jsconfig.json
 html/LAMPAPI/vendor
 
 .vscode
+
+# ignore composer files
+html/LAMPAPI/vendor
+html/LAMPAPI/composer.json
+html/LAMPAPI/composer.lock

@@ -125,17 +125,19 @@ function doLogout() {
 function addUser() {
   let firstName = $("#regFirstName").val();
   let lastName = $("#regLastName").val();
+  let email = $("#regEmail").val();
   let login = $("#regUserName").val();
   let password = $("#regPassword").val();
   password = md5(password);
 
-  if (!firstName || !lastName || !login || !password) {
+  if (!firstName || !lastName || !login || !password || !email) {
     console.log("missing information! not creating user...")
   }
   else {
     let json = JSON.stringify({
       firstName: firstName,
       lastName: lastName,
+      email: email,
       login: login,
       password: password
     });
@@ -928,6 +930,24 @@ $(function () {
       }
     }
   });
+
+  // handle add contact modal
+  $("#addContactModal").on("show.bs.modal", e => {
+    console.log("contact modal shown!");
+  });
+
+  $("#addContactModal").on("hidden.bs.modal", function() {
+    clearAddContactForm();
+  });
+  
+  // validate email 
+  const validateEmail = (email) => {
+    return email.match(
+      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
+    );
+  };
+
+  $("#regEmail").on("input", validateEmail($("#regEmail").val()));
 
   // handle add contact modal
   $("#addContactModal").on("show.bs.modal", e => {
