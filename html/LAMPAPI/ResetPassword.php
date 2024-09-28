@@ -60,13 +60,14 @@ else {
 
     // Attempt to send the email
     if (!$mail->send()) {
-        echo 'Email not sent. An error was encountered: ' . $mail->ErrorInfo;
-    } else {
-        echo 'Message has been sent.';
+      /*echo 'Email not sent. An error was encountered: ' . $mail->ErrorInfo;*/
+      returnWithError("Email not sent. An error was encountered: " . $mail->ErrorInfo);
+    } 
+    else {
+      returnWithError("");
     }
 
     $mail->smtpClose();
-
 
   } 
   else {
