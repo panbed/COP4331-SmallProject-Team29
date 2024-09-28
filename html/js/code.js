@@ -192,6 +192,64 @@ function addUser() {
   }
 }
 
+function resetPassword() {
+  let email = $("#resetEmail").val();
+
+  if(!email) {
+    console.log("no input provided");
+  }
+  else {
+    let json = JSON.stringify({
+      email: email
+    });
+
+    let url = `${urlBase}/ResetPassword.${extension}`;
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+      xhr.onreadystatechange = function () {
+        if(this.readyState == 4 && this.status == 200) {
+          let jsonObject = JSON.parse(xhr.responseText);
+          if(jsonObject.error) {
+            $("#toasts").append(`
+              <div class="toast show">
+                <div class="toast-header">
+                  <strong class="me-auto">An error has occured!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  ${jsonObject.error}
+                </div>
+              </div>
+          `)
+          }
+          else {
+            $("#toasts").append(`
+              <div class="toast show">
+                <div class="toast-header">
+                  <strong class="me-auto">Email sent!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  Please check your email for a temporary password
+                </div>
+              </div>
+          `)
+          }
+        }
+      };
+      xhr.send(json);
+    }
+    catch(err) {
+      $("#resetPasswordResult").text(err.message);
+    }
+  }
+}
+
 function setNullIfBlank(str) {
   if (str && str.trim()) {
     return str
@@ -907,6 +965,7 @@ function clearAddContactForm() {
 //   if ()
 // }
 
+
 // extra functions to load after the window loads
 $(function () {
   console.log("Contact Manager!!!")
@@ -940,14 +999,6 @@ $(function () {
     clearAddContactForm();
   });
   
-  // validate email 
-  const validateEmail = (email) => {
-    return email.match(
-      /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/
-    );
-  };
-
-  $("#regEmail").on("input", validateEmail($("#regEmail").val()));
 
   // handle add contact modal
   $("#addContactModal").on("show.bs.modal", e => {
