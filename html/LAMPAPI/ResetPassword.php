@@ -15,6 +15,9 @@ $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 if($conn->connect_error) {
   returnWithError($conn->connect_error);
 }
+else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+  returnWithError("Invalid Email Address");
+}
 else {
   $stmt = $conn->prepare("SELECT FirstName,LastName FROM Users WHERE Email=?");
   $stmt->bind_param("s", $email);
@@ -84,17 +87,11 @@ function sendResultInfoAsJson( $obj )
 		echo $obj;
 	}
 	
-function returnWithError( $err )
-	{
-		$retValue = '{"id":0,"firstName":"","lastName":"","error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
-	}
-	
-function returnWithInfo( $firstName, $lastName, $id )
-	{
-		$retValue = '{"id":' . $id . ',"firstName":"' . $firstName . '","lastName":"' . $lastName . '","error":""}';
-		sendResultInfoAsJson( $retValue );
+function returnWithError( $err ) {
+  $retValue = '{"error":"' . $err . '"}';
+	sendResultInfoAsJson( $retValue );
 }
+	
 
 
 function random_str(
