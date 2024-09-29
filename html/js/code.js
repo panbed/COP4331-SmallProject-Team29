@@ -192,6 +192,83 @@ function addUser() {
   }
 }
 
+function changePassword() {
+  let password = md5($("#changePasswordInput").val());
+  let verifyPassword = md5($("#changePasswordVerifyInput").val());
+  let newPassword = md5($("#newPasswordInput").val());
+
+  let json = JSON.stringify({
+    id: userId,
+    currentPassword: password,
+    newPassword: newPassword
+  });
+
+  let url = `${urlBase}/ChangePassword.${extension}`;
+  let xhr = new XMLHttpRequest();
+
+  xhr.open("POST", url, true);
+  xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+  try {
+    if (newPassword != verifyPassword) {
+      throw new Error("Your new password and it's verification do not match!");
+    }
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        let jsonObject = JSON.parse(xhr.responseText);
+        if (jsonObject.error) {
+          $("#toasts").append(`
+            <div class="toast show">
+              <div class="toast-header">
+                <strong class="me-auto">An error has occured!</strong>
+                <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+              </div>
+              <div class="toast-body">
+                ${jsonObject.error}
+              </div>
+            </div>
+          `)
+        }
+        else {
+          $("#toasts").append(`
+          <div class="toast show">
+            <div class="toast-header">
+              <strong class="me-auto">Success!</strong>
+              <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            </div>
+            <div class="toast-body">
+              <p>Your password has been changed. Logging you out shortly...</p>
+            </div>
+          </div>
+        `)
+
+        setTimeout(function() {
+          doLogout();
+        }, 2500);
+        }
+      }
+    };
+
+    xhr.send(json);
+  }
+  catch (err) {
+    $("#toasts").append(`
+    <div class="toast show">
+      <div class="toast-header">
+        <strong class="me-auto">An error has occured!</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+      <div class="toast-body">
+        ${err}
+      </div>
+    </div>
+  `)
+  }
+
+
+  
+}
+
 function resetPassword() {
   let email = $("#resetEmail").val();
 
@@ -595,8 +672,6 @@ function editContact(id) {
   //infoContainer.append(submitButton);
 
 }
-	
-
 
 function deleteContact(id) {
 	// console.log("deleteContact-" + id + " called");
@@ -961,11 +1036,6 @@ function clearAddContactForm() {
   $("#addContactForm").removeClass("was-validated");
 }
 
-// function validateForm(name, phone, email, address, birthday, favorite, picture, notes) {
-//   if ()
-// }
-
-
 // extra functions to load after the window loads
 $(function () {
   console.log("Contact Manager!!!")
@@ -1013,6 +1083,13 @@ $(function () {
   const addContactForm = $(document).find("#addContactForm")[0];
   if (addContactForm) {
     addContactForm.addEventListener('submit', event => {
+      event.preventDefault();
+    })
+  }
+
+  const changePasswordForm = $(document).find("#changePasswordForm")[0];
+  if (changePasswordForm) {
+    changePasswordForm.addEventListener('submit', event => {
       event.preventDefault();
     })
   }

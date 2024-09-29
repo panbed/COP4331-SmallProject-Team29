@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
   <script type="text/javascript" src="js/code.js"></script>
+  <script type="text/javascript" src="js/md5.js"></script>
   <link href="css/styles.css" rel="stylesheet">
 
   <script type="text/javascript">
@@ -54,10 +55,10 @@
         </div>
 
         <div class="btn-group" role="group" aria-label="Tools">
-          <button type="button" id="addContactButton" class="btn btn-primary" aria-label="Add a new contact" data-bs-toggle="modal" data-bs-target="#addContactModal" onclick="console.log(`in progress...`);">
+          <button type="button" id="addContactButton" class="btn btn-primary" aria-label="Add a new contact" data-bs-toggle="modal" data-bs-target="#addContactModal">
             <i class="bi bi-person-fill-add"></i>
           </button>
-          <button type="button" id="settingsButton" class="btn btn-primary" aria-label="Settings" onclick="console.log(`in progress...`);">
+          <button type="button" id="settingsButton" class="btn btn-primary" aria-label="Settings" data-bs-toggle="modal" data-bs-target="#settingsModal">
             <i class="bi bi-sliders"></i>
           </button>
         </div>
@@ -117,10 +118,10 @@
               <input type="checkbox" role="switch" class="form-check-input" id="favoriteInput">
             </div>
 
-			<div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <input type="submit" class="btn btn-primary" value="Add Contact">
-          </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <input type="submit" class="btn btn-primary" value="Add Contact">
+            </div>
 
         </div>
         </form>
@@ -133,6 +134,42 @@
       <div class="modal-content" id="deleteContactModalContent">
       </div>
     </div>	
+  </div>
+
+  <div class="modal fade" id="settingsModal">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content" id="settingsModalContent">
+        <div class="modal-header">
+          <h5 class="modal-title">Settings</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="changePasswordForm" onsubmit="changePassword();" novalidate>
+            <div class="mb-3">
+              <label for="changePasswordInput" class="col-form-label">Password</label>
+              <input type="password" class="form-control" id="changePasswordInput" maxlength="255">
+            </div>
+
+            <div class="mb-3">
+              <label for="newPasswordInput" class="col-form-label">New Password</label>
+              <input type="password" class="form-control" id="newPasswordInput" maxlength="255">
+            </div>
+
+            <div class="mb-3">
+              <label for="changePasswordVerifyInput" class="col-form-label">Verify New Password</label>
+              <input type="password" class="form-control" id="changePasswordVerifyInput" maxlength="255">
+            </div>
+
+            <input type="submit" class="btn btn-danger mb-3" value="Change Password">
+          </form>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <main id="allContactsView" class="container">

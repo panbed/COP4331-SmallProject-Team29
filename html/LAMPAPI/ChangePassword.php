@@ -22,6 +22,7 @@ else {
     $stmt = $conn->prepare("UPDATE Users SET Password=? WHERE ID=?");
     $stmt->bind_param("sd", $newPass, $id);
     $stmt->execute();
+    returnWithError("");
   }
   else {
     returnWithError("Invalid Password, please try again");
