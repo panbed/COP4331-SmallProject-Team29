@@ -223,7 +223,6 @@ function deleteUser() {
     xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
 
     try {
-      window.location.href = "index.html"
       xhr.onreadystatechange = function () {
         if(this.readyState == 4 && this.status == 200) {
           let jsonObject = JSON.parse(xhr.responseText);
@@ -241,7 +240,6 @@ function deleteUser() {
           `)
           }
           else {
-            // $("#createAccountResult").text("Account created successfully!");
             $("#toasts").append(`
               <div class="toast show">
                 <div class="toast-header">
@@ -252,12 +250,13 @@ function deleteUser() {
                   You will be logged out shortly...
                 </div>
               </div>
-          `)
+            `)
 
           }
         }
       };
       xhr.send(json);
+      doLogout();
     }
     catch(err) {
       $("#createAccountResult").text(err.message);
