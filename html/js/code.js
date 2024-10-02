@@ -192,6 +192,79 @@ function addUser() {
   }
 }
 
+function deleteUser() {
+
+  let fullName = firstName + " " + lastName
+  let nameVerification = $("#deleteUserVerification").val()
+
+  if (fullName != nameVerification) {
+    $("#toasts").append(`
+      <div class="toast show">
+        <div class="toast-header">
+          <strong class="me-auto">Unable to delete account!</strong>
+          <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+          Incorrect full name!
+        </div>
+      </div>
+    `)
+  }
+  else {
+    let json = JSON.stringify({
+      userID: userId,
+    });
+
+    let url = `${urlBase}/DeleteUser.${extension}`;
+
+    let xhr = new XMLHttpRequest();
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+      window.location.href = "index.html"
+      xhr.onreadystatechange = function () {
+        if(this.readyState == 4 && this.status == 200) {
+          let jsonObject = JSON.parse(xhr.responseText);
+          if(jsonObject.error) {
+            $("#toasts").append(`
+              <div class="toast show">
+                <div class="toast-header">
+                  <strong class="me-auto">An error has occured!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  ${jsonObject.error}
+                </div>
+              </div>
+          `)
+          }
+          else {
+            // $("#createAccountResult").text("Account created successfully!");
+            $("#toasts").append(`
+              <div class="toast show">
+                <div class="toast-header">
+                  <strong class="me-auto">Successfully deleted account!</strong>
+                  <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                  You will be logged out shortly...
+                </div>
+              </div>
+          `)
+
+          }
+        }
+      };
+      xhr.send(json);
+    }
+    catch(err) {
+      $("#createAccountResult").text(err.message);
+    }
+  }
+}
+
 function changePassword() {
   let password = md5($("#changePasswordInput").val());
   let verifyPassword = md5($("#changePasswordVerifyInput").val());

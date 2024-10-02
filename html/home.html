@@ -145,6 +145,7 @@
         </div>
         <div class="modal-body">
           <form id="changePasswordForm" onsubmit="changePassword();" novalidate>
+            <h5>Change Password</h5>
             <div class="mb-3">
               <label for="changePasswordInput" class="col-form-label">Password</label>
               <input type="password" class="form-control" id="changePasswordInput" maxlength="255">
@@ -160,10 +161,21 @@
               <input type="password" class="form-control" id="changePasswordVerifyInput" maxlength="255">
             </div>
 
-            <input type="submit" class="btn btn-danger mb-3" value="Change Password">
+            <input type="submit" class="btn btn-primary mb-3" value="Change Password">
           </form>
 
-          <div class="modal-footer">
+          <hr>
+
+          <div>
+            <h5>Delete Account</h5>
+            <p>To delete your account, please enter your first and last name, then select "Delete Account"</p>
+            <input type="text" class="form-control mb-3" id="deleteUserVerification" maxlength="101">
+            <button type="button" class="btn btn-danger justify-content-start" onclick="deleteUser()">Delete Account</button>
+          </div>
+
+          </div>
+
+          <div class="d-flex modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
           </div>
         </div>
