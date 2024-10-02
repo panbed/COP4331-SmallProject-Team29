@@ -15,7 +15,11 @@ $secure = md5($password);
 
 if ($conn->connect_error) {
   returnWithError($conn->connect_error);
-} else {
+}
+else if(!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+  returnWithError("Invalid Email Address");
+}
+else {
     $stmt = $conn->prepare("SELECT firstName,lastName FROM Users WHERE login=? OR email=?");
     $stmt->bind_param("ss", $login, $email);
     $stmt->execute();
@@ -32,8 +36,8 @@ if ($conn->connect_error) {
     }
 
     $stmt->close();
-    $conn->close();
 }
+$conn->close();
 
 function getRequestInfo()
 {
